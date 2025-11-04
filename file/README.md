@@ -1,3 +1,72 @@
+# 🎯 WowDash - Admin Dashboard
+
+Modern React-based admin dashboard for product management system.
+
+---
+
+## 🚀 Quick Start
+
+### Development
+
+```bash
+npm install
+npm start
+```
+
+### Production Build
+
+```bash
+npm run build
+```
+
+## 🌐 Deploy to Vercel
+
+### Quick Deploy
+
+```bash
+npm install -g vercel
+vercel login
+vercel --prod
+```
+
+Or run the deployment script:
+
+```bash
+deploy.bat
+```
+
+**📖 See [VERCEL_DEPLOYMENT_GUIDE.md](../../VERCEL_DEPLOYMENT_GUIDE.md) for detailed deployment instructions.**
+
+## 🔧 Environment Variables
+
+Copy `.env.example` to `.env` and configure:
+
+```env
+NODE_PATH=./src
+REACT_APP_API_URL=https://your-backend-api.com/api
+```
+
+## 📦 Features
+
+- ✅ Product Management (CRUD)
+- ✅ Product Variants with dynamic attributes
+- ✅ Product Gallery management
+- ✅ Stock Management with audit trail
+- ✅ Categories, Brands, Attributes
+- ✅ User Authentication (JWT)
+- ✅ Responsive Bootstrap design
+
+## 🛠️ Tech Stack
+
+- React 18
+- React Router DOM v6
+- Bootstrap 5
+- Axios
+- React Toastify
+- Iconify Icons
+
+---
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
