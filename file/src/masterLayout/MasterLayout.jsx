@@ -171,33 +171,6 @@ const MasterLayout = ({ children }) => {
             <li className='sidebar-menu-group-title'></li>
             <li>
               <NavLink
-                to='/email'
-                className={(navData) => (navData.isActive ? "active-page" : "")}
-              >
-                <Icon icon='mage:email' className='menu-icon' />
-                <span>Payment</span>
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                to='/chat-message'
-                className={(navData) => (navData.isActive ? "active-page" : "")}
-              >
-                <Icon icon='bi:chat-dots' className='menu-icon' />
-                <span>Orders</span>
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                to='/calendar-main'
-                className={(navData) => (navData.isActive ? "active-page" : "")}
-              >
-                <Icon icon='solar:calendar-outline' className='menu-icon' />
-                <span>Products</span>
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
                 to='/categories-list'
                 className={(navData) => (navData.isActive ? "active-page" : "")}
               >
