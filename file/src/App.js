@@ -105,6 +105,15 @@ import AddVariantPage from "./pages/AddVariantPage";
 import EditVariantPage from "./pages/EditVariantPage";
 import ProductGalleryPage from "./pages/ProductGalleryPage";
 import StockManagementPage from "./pages/StockManagementPage";
+import TagsListPage from "./pages/TagsListPage";
+import AddTagPage from "./pages/AddTagPage";
+import EditTagPage from "./pages/EditTagPage";
+import ProductFaqsListPage from "./pages/ProductFaqsListPage";
+import AddProductFaqPage from "./pages/AddProductFaqPage";
+import EditProductFaqPage from "./pages/EditProductFaqPage";
+import ProductSeoListPage from "./pages/ProductSeoListPage";
+import AddProductSeoPage from "./pages/AddProductSeoPage";
+import EditProductSeoPage from "./pages/EditProductSeoPage";
 import BlogPage from "./pages/BlogPage";
 import BlogDetailsPage from "./pages/BlogDetailsPage";
 import AddBlogPage from "./pages/AddBlogPage";
@@ -267,6 +276,29 @@ function App() {
           exact
           path="/stock-management"
           element={<StockManagementPage />}
+        />
+
+        {/* Tag Routes */}
+        <Route exact path="/tags-list" element={<TagsListPage />} />
+        <Route exact path="/add-tag" element={<AddTagPage />} />
+        <Route exact path="/edit-tag/:id" element={<EditTagPage />} />
+
+        {/* Product FAQ Routes */}
+        <Route exact path="/faqs-list" element={<ProductFaqsListPage />} />
+        <Route exact path="/add-faq" element={<AddProductFaqPage />} />
+        <Route exact path="/edit-faq/:id" element={<EditProductFaqPage />} />
+
+        {/* Product SEO Routes */}
+        <Route
+          exact
+          path="/product-seo-list"
+          element={<ProductSeoListPage />}
+        />
+        <Route exact path="/add-product-seo" element={<AddProductSeoPage />} />
+        <Route
+          exact
+          path="/edit-product-seo/:id"
+          element={<EditProductSeoPage />}
         />
 
         <Route exact path="*" element={<ErrorPage />} />

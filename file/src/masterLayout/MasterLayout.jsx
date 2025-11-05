@@ -234,6 +234,33 @@ const MasterLayout = ({ children }) => {
             </li>
             <li>
               <NavLink
+                to='/tags-list'
+                className={(navData) => (navData.isActive ? "active-page" : "")}
+              >
+                <Icon icon='solar:tag-bold-duotone' className='menu-icon' />
+                <span>Tags</span>
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to='/faqs-list'
+                className={(navData) => (navData.isActive ? "active-page" : "")}
+              >
+                <Icon icon='material-symbols:help' className='menu-icon' />
+                <span>Product FAQs</span>
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to='/product-seo-list'
+                className={(navData) => (navData.isActive ? "active-page" : "")}
+              >
+                <Icon icon='mdi:search-web' className='menu-icon' />
+                <span>Product SEO</span>
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
                 to='/kanban'
                 className={(navData) => (navData.isActive ? "active-page" : "")}
               >
