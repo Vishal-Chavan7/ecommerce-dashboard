@@ -261,6 +261,114 @@ const MasterLayout = ({ children }) => {
             </li>
             <li>
               <NavLink
+                to='/product-pricing-list'
+                className={(navData) => (navData.isActive ? "active-page" : "")}
+              >
+                <Icon icon='mdi:currency-inr' className='menu-icon' />
+                <span>Product Pricing</span>
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to='/tier-pricing-list'
+                className={(navData) => (navData.isActive ? "active-page" : "")}
+              >
+                <Icon icon='mdi:chart-box-multiple' className='menu-icon' />
+                <span>Tier Pricing</span>
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to='/special-pricing-list'
+                className={(navData) => (navData.isActive ? "active-page" : "")}
+              >
+                <Icon icon='mdi:tag-multiple' className='menu-icon' />
+                <span>Special Pricing</span>
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to='/tax-rules-list'
+                className={(navData) => (navData.isActive ? "active-page" : "")}
+              >
+                <Icon icon='mdi:gavel' className='menu-icon' />
+                <span>Tax Rules</span>
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to='/coupons-list'
+                className={(navData) => (navData.isActive ? "active-page" : "")}
+              >
+                <Icon icon='mdi:ticket-percent' className='menu-icon' />
+                <span>Coupons</span>
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to='/auto-discounts-list'
+                className={(navData) => (navData.isActive ? "active-page" : "")}
+              >
+                <Icon icon='mdi:sale' className='menu-icon' />
+                <span>Auto Discounts</span>
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to='/buy-x-get-y-list'
+                className={(navData) => (navData.isActive ? "active-page" : "")}
+              >
+                <Icon icon='mdi:gift' className='menu-icon' />
+                <span>Buy X Get Y</span>
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to='/flash-sales-list'
+                className={(navData) => (navData.isActive ? "active-page" : "")}
+              >
+                <Icon icon='mdi:flash' className='menu-icon' />
+                <span>Flash Sales</span>
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to='/combo-offers-list'
+                className={(navData) => (navData.isActive ? "active-page" : "")}
+              >
+                <Icon icon='mdi:package-variant-closed' className='menu-icon' />
+                <span>Combo Offers</span>
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to='/cart'
+                className={(navData) => (navData.isActive ? "active-page" : "")}
+              >
+                <Icon icon='mdi:cart' className='menu-icon' />
+                <span>Shopping Cart</span>
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to='/shipping-rules-list'
+                className={(navData) => (navData.isActive ? "active-page" : "")}
+              >
+                <Icon icon='mdi:truck-delivery' className='menu-icon' />
+                <span>Shipping Rules</span>
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to='/addresses-list'
+                className={(navData) => (navData.isActive ? "active-page" : "")}
+              >
+                <Icon icon='mdi:map-marker-multiple' className='menu-icon' />
+                <span>My Addresses</span>
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
                 to='/kanban'
                 className={(navData) => (navData.isActive ? "active-page" : "")}
               >

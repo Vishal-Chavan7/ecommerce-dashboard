@@ -114,6 +114,40 @@ import EditProductFaqPage from "./pages/EditProductFaqPage";
 import ProductSeoListPage from "./pages/ProductSeoListPage";
 import AddProductSeoPage from "./pages/AddProductSeoPage";
 import EditProductSeoPage from "./pages/EditProductSeoPage";
+import ProductPricingListPage from "./pages/ProductPricingListPage";
+import AddProductPricingPage from "./pages/AddProductPricingPage";
+import EditProductPricingPage from "./pages/EditProductPricingPage";
+import TierPricingListPage from "./pages/TierPricingListPage";
+import AddTierPricingPage from "./pages/AddTierPricingPage";
+import EditTierPricingPage from "./pages/EditTierPricingPage";
+import SpecialPricingListPage from "./pages/SpecialPricingListPage";
+import AddSpecialPricingPage from "./pages/AddSpecialPricingPage";
+import EditSpecialPricingPage from "./pages/EditSpecialPricingPage";
+import TaxRuleListPage from "./pages/TaxRuleListPage";
+import AddTaxRulePage from "./pages/AddTaxRulePage";
+import EditTaxRulePage from "./pages/EditTaxRulePage";
+import CouponListPage from "./pages/CouponListPage";
+import AddCouponPage from "./pages/AddCouponPage";
+import EditCouponPage from "./pages/EditCouponPage";
+import AutoDiscountListPage from "./pages/AutoDiscountListPage";
+import AddAutoDiscountPage from "./pages/AddAutoDiscountPage";
+import EditAutoDiscountPage from "./pages/EditAutoDiscountPage";
+import BuyXGetYListPage from "./pages/BuyXGetYListPage";
+import AddBuyXGetYPage from "./pages/AddBuyXGetYPage";
+import EditBuyXGetYPage from "./pages/EditBuyXGetYPage";
+import FlashSaleListPage from "./pages/FlashSaleListPage";
+import AddFlashSalePage from "./pages/AddFlashSalePage";
+import EditFlashSalePage from "./pages/EditFlashSalePage";
+import ComboOfferListPage from "./pages/ComboOfferListPage";
+import AddComboOfferPage from "./pages/AddComboOfferPage";
+import EditComboOfferPage from "./pages/EditComboOfferPage";
+import CartPage from "./pages/CartPage";
+import ShippingRuleListPage from "./pages/ShippingRuleListPage";
+import AddShippingRulePage from "./pages/AddShippingRulePage";
+import EditShippingRulePage from "./pages/EditShippingRulePage";
+import AddressListPage from "./pages/AddressListPage";
+import AddAddressPage from "./pages/AddAddressPage";
+import EditAddressPage from "./pages/EditAddressPage";
 import BlogPage from "./pages/BlogPage";
 import BlogDetailsPage from "./pages/BlogDetailsPage";
 import AddBlogPage from "./pages/AddBlogPage";
@@ -300,6 +334,128 @@ function App() {
           path="/edit-product-seo/:id"
           element={<EditProductSeoPage />}
         />
+
+        {/* Product Pricing Routes */}
+        <Route
+          exact
+          path="/product-pricing-list"
+          element={<ProductPricingListPage />}
+        />
+        <Route
+          exact
+          path="/add-product-pricing"
+          element={<AddProductPricingPage />}
+        />
+        <Route
+          exact
+          path="/edit-product-pricing/:id"
+          element={<EditProductPricingPage />}
+        />
+
+        {/* Tier Pricing Routes */}
+        <Route
+          exact
+          path="/tier-pricing-list"
+          element={<TierPricingListPage />}
+        />
+        <Route
+          exact
+          path="/add-tier-pricing"
+          element={<AddTierPricingPage />}
+        />
+        <Route
+          exact
+          path="/edit-tier-pricing/:id"
+          element={<EditTierPricingPage />}
+        />
+
+        {/* Special Pricing Routes */}
+        <Route
+          exact
+          path="/special-pricing-list"
+          element={<SpecialPricingListPage />}
+        />
+        <Route
+          exact
+          path="/add-special-pricing"
+          element={<AddSpecialPricingPage />}
+        />
+        <Route
+          exact
+          path="/edit-special-pricing/:id"
+          element={<EditSpecialPricingPage />}
+        />
+
+        {/* Tax Rules Routes */}
+        <Route exact path="/tax-rules-list" element={<TaxRuleListPage />} />
+        <Route exact path="/add-tax-rule" element={<AddTaxRulePage />} />
+        <Route exact path="/edit-tax-rule/:id" element={<EditTaxRulePage />} />
+        <Route exact path="/coupons-list" element={<CouponListPage />} />
+        <Route exact path="/add-coupon" element={<AddCouponPage />} />
+        <Route exact path="/edit-coupon/:id" element={<EditCouponPage />} />
+        <Route
+          exact
+          path="/auto-discounts-list"
+          element={<AutoDiscountListPage />}
+        />
+        <Route
+          exact
+          path="/add-auto-discount"
+          element={<AddAutoDiscountPage />}
+        />
+        <Route
+          exact
+          path="/edit-auto-discount/:id"
+          element={<EditAutoDiscountPage />}
+        />
+        <Route exact path="/buy-x-get-y-list" element={<BuyXGetYListPage />} />
+        <Route exact path="/add-buy-x-get-y" element={<AddBuyXGetYPage />} />
+        <Route
+          exact
+          path="/edit-buy-x-get-y/:id"
+          element={<EditBuyXGetYPage />}
+        />
+        <Route exact path="/flash-sales-list" element={<FlashSaleListPage />} />
+        <Route exact path="/add-flash-sale" element={<AddFlashSalePage />} />
+        <Route
+          exact
+          path="/edit-flash-sale/:id"
+          element={<EditFlashSalePage />}
+        />
+        <Route
+          exact
+          path="/combo-offers-list"
+          element={<ComboOfferListPage />}
+        />
+        <Route exact path="/add-combo-offer" element={<AddComboOfferPage />} />
+        <Route
+          exact
+          path="/edit-combo-offer/:id"
+          element={<EditComboOfferPage />}
+        />
+        <Route exact path="/cart" element={<CartPage />} />
+
+        {/* Shipping Rules Routes */}
+        <Route
+          exact
+          path="/shipping-rules-list"
+          element={<ShippingRuleListPage />}
+        />
+        <Route
+          exact
+          path="/add-shipping-rule"
+          element={<AddShippingRulePage />}
+        />
+        <Route
+          exact
+          path="/edit-shipping-rule/:id"
+          element={<EditShippingRulePage />}
+        />
+
+        {/* Address Routes */}
+        <Route exact path="/addresses-list" element={<AddressListPage />} />
+        <Route exact path="/add-address" element={<AddAddressPage />} />
+        <Route exact path="/edit-address/:id" element={<EditAddressPage />} />
 
         <Route exact path="*" element={<ErrorPage />} />
       </Routes>
