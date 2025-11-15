@@ -118,9 +118,10 @@ const MasterLayout = ({ children }) => {
         <div>
           <Link to='/' className='sidebar-logo'>
             <img
-              src='assets/images/logo.png'
+
+              src='assets/images/logo.jpeg'
               alt='site logo'
-              className='light-logo'
+              className='light-logo container'
             />
             <img
               src='assets/images/logo-light.png'
@@ -365,6 +366,60 @@ const MasterLayout = ({ children }) => {
               >
                 <Icon icon='mdi:map-marker-multiple' className='menu-icon' />
                 <span>My Addresses</span>
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to='/payment-methods'
+                className={(navData) => (navData.isActive ? "active-page" : "")}
+              >
+                <Icon icon='mdi:credit-card-settings' className='menu-icon' />
+                <span>Payment Methods</span>
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to='/payment-transactions'
+                className={(navData) => (navData.isActive ? "active-page" : "")}
+              >
+                <Icon icon='mdi:credit-card-sync' className='menu-icon' />
+                <span>Payment Transactions</span>
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to='/order-history'
+                className={(navData) => (navData.isActive ? "active-page" : "")}
+              >
+                <Icon icon='mdi:history' className='menu-icon' />
+                <span>Order History</span>
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to='/order-returns'
+                className={(navData) => (navData.isActive ? "active-page" : "")}
+              >
+                <Icon icon='mdi:package-variant-closed' className='menu-icon' />
+                <span>Order Returns</span>
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to='/order-replacements'
+                className={(navData) => (navData.isActive ? "active-page" : "")}
+              >
+                <Icon icon='mdi:package-variant' className='menu-icon' />
+                <span>Order Replacements</span>
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to='/returns'
+                className={(navData) => (navData.isActive ? "active-page" : "")}
+              >
+                <Icon icon='mdi:cash-refund' className='menu-icon' />
+                <span>Returns & Refunds</span>
               </NavLink>
             </li>
             <li>
@@ -1955,7 +2010,7 @@ const MasterLayout = ({ children }) => {
                     data-bs-toggle='dropdown'
                   >
                     <img
-                      src='assets/images/user.png'
+                      src='assets/images/user.webp'
                       alt='image_user'
                       className='w-40-px h-40-px object-fit-cover rounded-circle'
                     />

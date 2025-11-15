@@ -94,7 +94,7 @@ const VariantsListLayer = () => {
             <input
               type="text"
               className="form-control form-control-sm w-auto"
-              placeholder="Search by SKU or Barcode..."
+              placeholder="Search by SKU "
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -103,9 +103,10 @@ const VariantsListLayer = () => {
             </span>
           </div>
           <select
-            className="form-select form-select-sm w-auto"
+            className="form-select form-select-sm  p-1 m-1 w-auto"
             value={selectedProduct}
             onChange={(e) => setSelectedProduct(e.target.value)}
+            style={{ minWidth: '150px', fontSize: '15px', padding: '8px 12px' }}
           >
             <option value="">All Products</option>
             {products.map(product => (
@@ -116,10 +117,11 @@ const VariantsListLayer = () => {
           </select>
         </div>
         <button
-          className="btn btn-primary-600 btn-sm px-20 py-11 d-flex align-items-center gap-2"
+          className="btn btn-primary-600 btn-sm d-flex align-items-center gap-2"
           onClick={() => navigate('/add-variant')}
+          style={{ fontSize: '15px', padding: '8px 16px' }}
         >
-          <Icon icon="ic:baseline-plus" className="text-xl" />
+          <Icon icon="ic:baseline-plus" style={{ fontSize: '22px' }} />
           Add Variant
         </button>
       </div>
@@ -186,10 +188,10 @@ const VariantsListLayer = () => {
                     </td>
                     <td>
                       <span className={`badge text-sm fw-semibold px-20 py-9 radius-4 ${variant.stock > 10
-                          ? 'text-success-600 bg-success-100'
-                          : variant.stock > 0
-                            ? 'text-warning-600 bg-warning-100'
-                            : 'text-danger-600 bg-danger-100'
+                        ? 'text-success-600 bg-success-100'
+                        : variant.stock > 0
+                          ? 'text-warning-600 bg-warning-100'
+                          : 'text-danger-600 bg-danger-100'
                         }`}>
                         {variant.stock || 0}
                       </span>

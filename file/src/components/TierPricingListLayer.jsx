@@ -134,19 +134,20 @@ const TierPricingListLayer = () => {
                 <div className="col-12">
                     <div className="d-flex justify-content-between align-items-center flex-wrap gap-3">
                         <div>
-                            <h2 className="mb-2">
+                            <h2 className="mb-2 d-flex align-items-center" style={{ fontSize: '28px' }}>
                                 <Icon icon="mdi:chart-box-multiple" className="me-2" style={{ fontSize: '32px' }} />
                                 Tier Pricing Management
                             </h2>
-                            <p className="text-muted mb-0">
+                            <p className="text-muted mb-0" style={{ fontSize: '14px' }}>
                                 Manage bulk pricing and wholesale rates based on quantity slabs
                             </p>
                         </div>
                         <button
-                            className="btn btn-primary d-flex align-items-center gap-2"
+                            className="btn btn-primary d-flex align-items-center px-4 py-2"
                             onClick={() => navigate('/add-tier-pricing')}
+                            style={{ fontSize: '15px' }}
                         >
-                            <Icon icon="mdi:plus-circle" style={{ fontSize: '20px' }} />
+                            <Icon icon="mdi:plus-circle" className="me-2" style={{ fontSize: '20px' }} />
                             Add Tier Pricing
                         </button>
                     </div>
@@ -158,10 +159,10 @@ const TierPricingListLayer = () => {
                 <div className="col-12">
                     <div className="card shadow-sm">
                         <div className="card-body">
-                            <div className="row g-3">
+                            <div className="row g-3 align-items-end">
                                 <div className="col-md-4">
-                                    <label className="form-label">
-                                        <Icon icon="solar:box-bold-duotone" className="me-2" />
+                                    <label className="form-label fw-semibold d-flex align-items-center mb-2" style={{ fontSize: '14px' }}>
+                                        <Icon icon="solar:box-bold-duotone" className="me-2" style={{ fontSize: '18px' }} />
                                         Filter by Product
                                     </label>
                                     <select
@@ -171,6 +172,7 @@ const TierPricingListLayer = () => {
                                             setSelectedProduct(e.target.value);
                                             setSelectedVariant(''); // Reset variant when product changes
                                         }}
+                                        style={{ minWidth: '150px', fontSize: '14px', padding: '10px 12px' }}
                                     >
                                         <option value="">All Products</option>
                                         {products.map(product => (
@@ -182,8 +184,8 @@ const TierPricingListLayer = () => {
                                 </div>
 
                                 <div className="col-md-4">
-                                    <label className="form-label">
-                                        <Icon icon="mdi:palette" className="me-2" />
+                                    <label className="form-label fw-semibold d-flex align-items-center mb-2" style={{ fontSize: '14px' }}>
+                                        <Icon icon="mdi:palette" className="me-2" style={{ fontSize: '18px' }} />
                                         Filter by Variant
                                     </label>
                                     <select
@@ -191,6 +193,7 @@ const TierPricingListLayer = () => {
                                         value={selectedVariant}
                                         onChange={(e) => setSelectedVariant(e.target.value)}
                                         disabled={!selectedProduct}
+                                        style={{ minWidth: '150px', fontSize: '14px', padding: '10px 12px' }}
                                     >
                                         <option value="">All Variants</option>
                                         {variants
@@ -205,8 +208,8 @@ const TierPricingListLayer = () => {
                                 </div>
 
                                 <div className="col-md-4">
-                                    <label className="form-label">
-                                        <Icon icon="mdi:magnify" className="me-2" />
+                                    <label className="form-label fw-semibold d-flex align-items-center mb-2" style={{ fontSize: '14px' }}>
+                                        <Icon icon="mdi:magnify" className="me-2" style={{ fontSize: '18px' }} />
                                         Search
                                     </label>
                                     <input
@@ -215,6 +218,7 @@ const TierPricingListLayer = () => {
                                         placeholder="Search by product or SKU..."
                                         value={searchTerm}
                                         onChange={(e) => setSearchTerm(e.target.value)}
+                                        style={{ minWidth: '200px', fontSize: '14px', padding: '10px 12px' }}
                                     />
                                 </div>
                             </div>
@@ -222,14 +226,15 @@ const TierPricingListLayer = () => {
                             {(selectedProduct || selectedVariant || searchTerm) && (
                                 <div className="mt-3">
                                     <button
-                                        className="btn btn-sm btn-outline-secondary"
+                                        className="btn btn-sm btn-outline-secondary d-flex align-items-center"
                                         onClick={() => {
                                             setSelectedProduct('');
                                             setSelectedVariant('');
                                             setSearchTerm('');
                                         }}
+                                        style={{ fontSize: '13px' }}
                                     >
-                                        <Icon icon="mdi:filter-remove" className="me-1" />
+                                        <Icon icon="mdi:filter-remove" className="me-2" style={{ fontSize: '16px' }} />
                                         Clear Filters
                                     </button>
                                 </div>
@@ -249,8 +254,8 @@ const TierPricingListLayer = () => {
                                     <Icon icon="mdi:chart-line" style={{ fontSize: '40px', color: '#0d6efd' }} />
                                 </div>
                                 <div className="flex-grow-1 ms-3">
-                                    <h6 className="text-muted mb-1">Total Tier Rules</h6>
-                                    <h3 className="mb-0">{tierPricingList.length}</h3>
+                                    <h6 className="text-muted mb-1" style={{ fontSize: '13px' }}>Total Tier Rules</h6>
+                                    <h3 className="mb-0" style={{ fontSize: '26px' }}>{tierPricingList.length}</h3>
                                 </div>
                             </div>
                         </div>
@@ -264,8 +269,8 @@ const TierPricingListLayer = () => {
                                     <Icon icon="solar:box-bold-duotone" style={{ fontSize: '40px', color: '#198754' }} />
                                 </div>
                                 <div className="flex-grow-1 ms-3">
-                                    <h6 className="text-muted mb-1">Products with Tiers</h6>
-                                    <h3 className="mb-0">
+                                    <h6 className="text-muted mb-1" style={{ fontSize: '13px' }}>Products with Tiers</h6>
+                                    <h3 className="mb-0" style={{ fontSize: '26px' }}>
                                         {new Set(tierPricingList.map(t => t.productId)).size}
                                     </h3>
                                 </div>
@@ -281,8 +286,8 @@ const TierPricingListLayer = () => {
                                     <Icon icon="mdi:package-variant" style={{ fontSize: '40px', color: '#0dcaf0' }} />
                                 </div>
                                 <div className="flex-grow-1 ms-3">
-                                    <h6 className="text-muted mb-1">Variant Tiers</h6>
-                                    <h3 className="mb-0">
+                                    <h6 className="text-muted mb-1" style={{ fontSize: '13px' }}>Variant Tiers</h6>
+                                    <h3 className="mb-0" style={{ fontSize: '26px' }}>
                                         {tierPricingList.filter(t => t.variantId).length}
                                     </h3>
                                 </div>
@@ -298,9 +303,9 @@ const TierPricingListLayer = () => {
                     <div className="card shadow-sm">
                         <div className="card-header bg-white">
                             <div className="d-flex justify-content-between align-items-center">
-                                <h5 className="mb-0">
+                                <h5 className="mb-0 d-flex align-items-center" style={{ fontSize: '18px' }}>
                                     Tier Pricing List
-                                    <span className="badge bg-primary ms-2">{tierPricingList.length}</span>
+                                    <span className="badge bg-primary ms-2" style={{ fontSize: '13px' }}>{tierPricingList.length}</span>
                                 </h5>
                             </div>
                         </div>
@@ -310,20 +315,21 @@ const TierPricingListLayer = () => {
                                     <div className="spinner-border text-primary" role="status">
                                         <span className="visually-hidden">Loading...</span>
                                     </div>
-                                    <p className="mt-2 text-muted">Loading tier pricing data...</p>
+                                    <p className="mt-2 text-muted" style={{ fontSize: '14px' }}>Loading tier pricing data...</p>
                                 </div>
                             ) : tierPricingList.length === 0 ? (
                                 <div className="text-center py-5">
                                     <Icon icon="mdi:chart-box-multiple-outline" style={{ fontSize: '64px', color: '#ccc' }} />
-                                    <h5 className="mt-3 text-muted">No Tier Pricing Found</h5>
-                                    <p className="text-muted mb-4">
+                                    <h5 className="mt-3 text-muted" style={{ fontSize: '18px' }}>No Tier Pricing Found</h5>
+                                    <p className="text-muted mb-4" style={{ fontSize: '14px' }}>
                                         Start by creating your first tier pricing rule for bulk orders
                                     </p>
                                     <button
-                                        className="btn btn-primary"
+                                        className="btn btn-primary d-flex align-items-center px-4 py-2 mx-auto"
                                         onClick={() => navigate('/add-tier-pricing')}
+                                        style={{ fontSize: '15px' }}
                                     >
-                                        <Icon icon="mdi:plus-circle" className="me-2" />
+                                        <Icon icon="mdi:plus-circle" className="me-2" style={{ fontSize: '18px' }} />
                                         Add First Tier Pricing
                                     </button>
                                 </div>
@@ -331,35 +337,35 @@ const TierPricingListLayer = () => {
                                 <div className="table-responsive">
                                     <table className="table table-hover align-middle mb-0">
                                         <thead className="table-light">
-                                            <tr>
-                                                <th>Product</th>
-                                                <th>Variant</th>
-                                                <th>Quantity Range</th>
-                                                <th>Min Qty</th>
-                                                <th>Max Qty</th>
-                                                <th>Tier Price</th>
-                                                <th className="text-center">Actions</th>
+                                            <tr style={{ fontSize: '14px' }}>
+                                                <th className="fw-semibold">Product</th>
+                                                <th className="fw-semibold">Variant</th>
+                                                <th className="fw-semibold">Quantity Range</th>
+                                                <th className="fw-semibold">Min Qty</th>
+                                                <th className="fw-semibold">Max Qty</th>
+                                                <th className="fw-semibold">Tier Price</th>
+                                                <th className="text-center fw-semibold">Actions</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
+                                        <tbody style={{ fontSize: '14px' }}>
                                             {tierPricingList.map((tier) => (
                                                 <tr key={tier._id}>
                                                     <td>
                                                         <div className="d-flex align-items-center">
                                                             <Icon icon="solar:box-bold-duotone" className="me-2" style={{ fontSize: '24px', color: '#0d6efd' }} />
                                                             <div>
-                                                                <div className="fw-semibold">{tier.productName}</div>
+                                                                <div className="fw-semibold" style={{ fontSize: '14px' }}>{tier.productName}</div>
                                                             </div>
                                                         </div>
                                                     </td>
                                                     <td>
                                                         {tier.variantSKU ? (
                                                             <div>
-                                                                <span className="badge bg-info">
+                                                                <span className="badge bg-info" style={{ fontSize: '12px' }}>
                                                                     {tier.variantSKU}
                                                                 </span>
                                                                 {tier.variantDetails && (
-                                                                    <div className="small text-muted mt-1">
+                                                                    <div className="small text-muted mt-1" style={{ fontSize: '12px' }}>
                                                                         {tier.variantDetails}
                                                                     </div>
                                                                 )}
@@ -369,24 +375,24 @@ const TierPricingListLayer = () => {
                                                         )}
                                                     </td>
                                                     <td>
-                                                        <span className={`badge bg-${getDiscountBadgeVariant(tier.minQty)}`}>
+                                                        <span className={`badge bg-${getDiscountBadgeVariant(tier.minQty)}`} style={{ fontSize: '12px' }}>
                                                             <Icon icon="mdi:package-variant" className="me-1" />
                                                             {getQuantityRangeText(tier.minQty, tier.maxQty)}
                                                         </span>
                                                     </td>
                                                     <td>
-                                                        <span className="badge bg-light text-dark border">
+                                                        <span className="badge bg-light text-dark border" style={{ fontSize: '13px' }}>
                                                             {tier.minQty}
                                                         </span>
                                                     </td>
                                                     <td>
-                                                        <span className="badge bg-light text-dark border">
+                                                        <span className="badge bg-light text-dark border" style={{ fontSize: '13px' }}>
                                                             {tier.maxQty && tier.maxQty < 999999 ? tier.maxQty : '∞'}
                                                         </span>
                                                     </td>
                                                     <td>
                                                         <div className="d-flex align-items-center">
-                                                            <Icon icon="mdi:currency-inr" className="me-1" style={{ fontSize: '18px', color: '#198754' }} />
+                                                            <Icon icon="mdi:currency-inr" className="me-2" style={{ fontSize: '18px', color: '#198754' }} />
                                                             <span className="fw-bold text-success" style={{ fontSize: '16px' }}>
                                                                 {tier.price.toFixed(2)}
                                                             </span>
@@ -395,18 +401,22 @@ const TierPricingListLayer = () => {
                                                     <td>
                                                         <div className="d-flex justify-content-center gap-2">
                                                             <button
-                                                                className="btn btn-sm btn-outline-primary"
+                                                                className="btn btn-sm btn-outline-primary d-flex align-items-center px-3 py-2"
                                                                 onClick={() => navigate(`/edit-tier-pricing/${tier._id}`)}
                                                                 title="Edit"
+                                                                style={{ fontSize: '13px' }}
                                                             >
-                                                                <Icon icon="mdi:pencil" style={{ fontSize: '16px' }} />
+                                                                <Icon icon="mdi:pencil" className="me-1" style={{ fontSize: '16px' }} />
+                                                                Edit
                                                             </button>
                                                             <button
-                                                                className="btn btn-sm btn-outline-danger"
+                                                                className="btn btn-sm btn-outline-danger d-flex align-items-center px-3 py-2"
                                                                 onClick={() => openDeleteModal(tier._id)}
                                                                 title="Delete"
+                                                                style={{ fontSize: '13px' }}
                                                             >
-                                                                <Icon icon="mdi:delete" style={{ fontSize: '16px' }} />
+                                                                <Icon icon="mdi:delete" className="me-1" style={{ fontSize: '16px' }} />
+                                                                Delete
                                                             </button>
                                                         </div>
                                                     </td>
@@ -427,7 +437,7 @@ const TierPricingListLayer = () => {
                     <div className="modal-dialog modal-dialog-centered">
                         <div className="modal-content">
                             <div className="modal-header border-0">
-                                <h5 className="modal-title">Confirm Delete</h5>
+                                <h5 className="modal-title" style={{ fontSize: '18px' }}>Confirm Delete</h5>
                                 <button
                                     type="button"
                                     className="btn-close"
@@ -436,25 +446,28 @@ const TierPricingListLayer = () => {
                             </div>
                             <div className="modal-body text-center py-4">
                                 <Icon icon="mdi:alert-circle" style={{ fontSize: '64px', color: '#dc3545' }} />
-                                <h5 className="mt-3">Are you sure?</h5>
-                                <p className="text-muted">
+                                <h5 className="mt-3" style={{ fontSize: '18px' }}>Are you sure?</h5>
+                                <p className="text-muted" style={{ fontSize: '14px' }}>
                                     This will permanently delete this tier pricing rule. This action cannot be undone.
                                 </p>
                             </div>
-                            <div className="modal-footer border-0">
+                            <div className="modal-footer border-0 justify-content-center gap-2">
                                 <button
                                     type="button"
-                                    className="btn btn-secondary"
+                                    className="btn btn-secondary d-flex align-items-center px-4 py-2"
                                     onClick={() => setShowDeleteModal(false)}
+                                    style={{ fontSize: '14px' }}
                                 >
+                                    <Icon icon="mdi:close" className="me-2" style={{ fontSize: '18px' }} />
                                     Cancel
                                 </button>
                                 <button
                                     type="button"
-                                    className="btn btn-danger"
+                                    className="btn btn-danger d-flex align-items-center px-4 py-2"
                                     onClick={handleDelete}
+                                    style={{ fontSize: '14px' }}
                                 >
-                                    <Icon icon="mdi:delete" className="me-2" />
+                                    <Icon icon="mdi:delete" className="me-2" style={{ fontSize: '18px' }} />
                                     Delete
                                 </button>
                             </div>

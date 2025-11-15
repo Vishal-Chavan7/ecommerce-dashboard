@@ -79,26 +79,15 @@ const ProductsListLayer = () => {
         }
     };
 
-    const handleToggleFeatured = async (id, currentFeatured) => {
-        try {
-            await api.put(`/admin/products/${id}`, { isFeatured: !currentFeatured });
-            toast.success('Featured status updated successfully');
-            fetchProducts();
-        } catch (error) {
-            console.error('Error updating featured status:', error);
-            toast.error('Failed to update featured status');
-        }
-    };
-
     const filteredProducts = products.filter(product => {
         const matchesSearch = product.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
             product.sku.toLowerCase().includes(searchTerm.toLowerCase());
-        
+
         const matchesBrand = filterBrand === 'all' || product.brandId?._id === filterBrand;
-        const matchesCategory = filterCategory === 'all' || 
+        const matchesCategory = filterCategory === 'all' ||
             product.categoryIds?.some(cat => cat._id === filterCategory);
         const matchesType = filterType === 'all' || product.type === filterType;
-        const matchesStatus = filterStatus === 'all' || 
+        const matchesStatus = filterStatus === 'all' ||
             (filterStatus === 'active' && product.status) ||
             (filterStatus === 'inactive' && !product.status);
 
@@ -122,16 +111,16 @@ const ProductsListLayer = () => {
                     <div className='d-flex flex-wrap align-items-center gap-3'>
                         <div className='d-flex align-items-center gap-2'>
                             <span>Show</span>
-                            <select className='form-select form-select-sm w-auto'>
+                            <select className='form-select form-select-sm pt-1 w-auto'>
                                 <option value='10'>10</option>
                                 <option value='25'>25</option>
                                 <option value='50'>50</option>
                                 <option value='100'>100</option>
                             </select>
                         </div>
-                        
-                        <select 
-                            className='form-select form-select-sm w-auto'
+
+                        <select
+                            className='form-select form-select-sm pt-1 w-auto'
                             value={filterBrand}
                             onChange={(e) => setFilterBrand(e.target.value)}
                         >
@@ -141,8 +130,8 @@ const ProductsListLayer = () => {
                             ))}
                         </select>
 
-                        <select 
-                            className='form-select form-select-sm w-auto'
+                        <select
+                            className='form-select form-select-sm w-auto pt-1'
                             value={filterCategory}
                             onChange={(e) => setFilterCategory(e.target.value)}
                         >
@@ -152,8 +141,8 @@ const ProductsListLayer = () => {
                             ))}
                         </select>
 
-                        <select 
-                            className='form-select form-select-sm w-auto'
+                        <select
+                            className='form-select form-select-sm w-auto pt-1'
                             value={filterType}
                             onChange={(e) => setFilterType(e.target.value)}
                         >
@@ -162,8 +151,8 @@ const ProductsListLayer = () => {
                             <option value='variable'>Variable</option>
                         </select>
 
-                        <select 
-                            className='form-select form-select-sm w-auto'
+                        <select
+                            className='form-select form-select-sm pt-1 w-auto'
                             value={filterStatus}
                             onChange={(e) => setFilterStatus(e.target.value)}
                         >
@@ -186,7 +175,7 @@ const ProductsListLayer = () => {
                                 <Icon icon='ion:search-outline' />
                             </span>
                         </div>
-                        
+
                         <button
                             className='btn btn-primary-600 btn-sm'
                             onClick={() => navigate('/add-product')}
@@ -212,7 +201,6 @@ const ProductsListLayer = () => {
                                     <th scope='col'>SKU</th>
                                     <th scope='col'>Brand</th>
                                     <th scope='col'>Type</th>
-                                    <th scope='col'>Featured</th>
                                     <th scope='col'>Status</th>
                                     <th scope='col' className='text-center'>Action</th>
                                 </tr>
@@ -220,7 +208,7 @@ const ProductsListLayer = () => {
                             <tbody>
                                 {filteredProducts.length === 0 ? (
                                     <tr>
-                                        <td colSpan='9' className='text-center py-4'>
+                                        <td colSpan='8' className='text-center py-4'>
                                             <div className='d-flex flex-column align-items-center gap-2'>
                                                 <Icon icon='mdi:package-variant-closed-remove' className='text-secondary-light' style={{ fontSize: '48px' }} />
                                                 <p className='mb-0 text-secondary-light'>No products found</p>
@@ -268,25 +256,26 @@ const ProductsListLayer = () => {
                                                 </span>
                                             </td>
                                             <td>
-                                                <div className='form-check form-switch'>
-                                                    <input
-                                                        className='form-check-input'
-                                                        type='checkbox'
-                                                        role='switch'
-                                                        checked={product.isFeatured}
-                                                        onChange={() => handleToggleFeatured(product._id, product.isFeatured)}
-                                                    />
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div className='form-check form-switch'>
-                                                    <input
-                                                        className='form-check-input'
-                                                        type='checkbox'
-                                                        role='switch'
-                                                        checked={product.status}
-                                                        onChange={() => handleToggleStatus(product._id, product.status)}
-                                                    />
+                                                <div className='d-flex align-items-center gap-3'>
+                                                    <span className={`badge px-3 py-1 ${product.status ? 'bg-success-600 text-white' : 'bg-neutral-400 text-white'}`}>
+                                                        {product.status ? 'Active' : 'Inactive'}
+                                                    </span>
+                                                    <div className='form-check form-switch m-0'>
+                                                        <input
+                                                            className='form-check-input cursor-pointer shadow-none'
+                                                            type='checkbox'
+                                                            role='switch'
+                                                            checked={product.status}
+                                                            onChange={() => handleToggleStatus(product._id, product.status)}
+                                                            style={{
+                                                                width: '48px',
+                                                                height: '24px',
+                                                                backgroundColor: product.status ? '#10b981' : '#d1d5db',
+                                                                borderColor: product.status ? '#10b981' : '#d1d5db',
+                                                                transition: 'all 0.3s ease'
+                                                            }}
+                                                        />
+                                                    </div>
                                                 </div>
                                             </td>
                                             <td className='text-center'>

@@ -68,8 +68,8 @@ const BrandsListLayer = () => {
     const filteredBrands = brands.filter(brand => {
         const matchesSearch = brand.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
             brand.slug.toLowerCase().includes(searchTerm.toLowerCase());
-        
-        const matchesStatus = filterStatus === 'all' || 
+
+        const matchesStatus = filterStatus === 'all' ||
             (filterStatus === 'active' && brand.status) ||
             (filterStatus === 'inactive' && !brand.status);
 
@@ -93,17 +93,17 @@ const BrandsListLayer = () => {
                     <div className='d-flex flex-wrap align-items-center gap-3'>
                         <div className='d-flex align-items-center gap-2'>
                             <span>Show</span>
-                            <select className='form-select form-select-sm w-auto'>
-                                <option value='10'>10</option>
-                                <option value='25'>25</option>
-                                <option value='50'>50</option>
-                                <option value='100'>100</option>
+                            <select className='form-select form-select-sm  p-1  w-auto'>
+                                <option className='m-2' value='10'>10</option>
+                                <option className='m-2' value='25'>25</option>
+                                <option className='m-2' value='50'>50</option>
+                                <option className='m-2' value='100'>100</option>
                             </select>
                             <span>entries</span>
                         </div>
-                        
-                        <select 
-                            className='form-select form-select-sm w-auto'
+
+                        <select
+                            className='form-select form-select-sm  p-1 w-auto'
                             value={filterStatus}
                             onChange={(e) => setFilterStatus(e.target.value)}
                         >
@@ -126,7 +126,7 @@ const BrandsListLayer = () => {
                                 <Icon icon='ion:search-outline' />
                             </span>
                         </div>
-                        
+
                         <button
                             className='btn btn-primary-600 btn-sm'
                             onClick={() => navigate('/add-brand')}
@@ -148,10 +148,7 @@ const BrandsListLayer = () => {
                                         </div>
                                     </th>
                                     <th scope='col'>Logo</th>
-                                    <th scope='col'>Name</th>
-                                    <th scope='col'>Slug</th>
-                                    <th scope='col'>Website</th>
-                                    <th scope='col'>Featured</th>
+                                    <th scope='col'>Brand Name</th>
                                     <th scope='col'>Status</th>
                                     <th scope='col' className='text-center'>Action</th>
                                 </tr>
@@ -159,7 +156,7 @@ const BrandsListLayer = () => {
                             <tbody>
                                 {filteredBrands.length === 0 ? (
                                     <tr>
-                                        <td colSpan='8' className='text-center py-4'>
+                                        <td colSpan='5' className='text-center py-4'>
                                             <div className='d-flex flex-column align-items-center gap-2'>
                                                 <Icon icon='mdi:store-off-outline' className='text-secondary-light' style={{ fontSize: '48px' }} />
                                                 <p className='mb-0 text-secondary-light'>No brands found</p>
@@ -176,69 +173,68 @@ const BrandsListLayer = () => {
                                             </td>
                                             <td>
                                                 {brand.logo ? (
-                                                    <img src={brand.logo} alt={brand.name} className='rounded' style={{ width: '40px', height: '40px', objectFit: 'contain' }} />
+                                                    <img
+                                                        src={brand.logo.startsWith('http') ? brand.logo : `http://localhost:5000${brand.logo}`}
+                                                        alt={brand.name}
+                                                        className='rounded-circle border'
+                                                        style={{
+                                                            width: '48px',
+                                                            height: '48px',
+                                                            objectFit: 'cover',
+                                                            padding: '4px',
+                                                            backgroundColor: '#fff'
+                                                        }}
+                                                    />
                                                 ) : (
-                                                    <div className='bg-neutral-200 rounded d-flex align-items-center justify-content-center' style={{ width: '40px', height: '40px' }}>
-                                                        <Icon icon='mdi:image-off' className='text-secondary-light' />
+                                                    <div
+                                                        className='bg-neutral-100 rounded-circle border d-flex align-items-center justify-content-center'
+                                                        style={{ width: '48px', height: '48px' }}
+                                                    >
+                                                        <Icon icon='mdi:store' className='text-neutral-400' style={{ fontSize: '24px' }} />
                                                     </div>
                                                 )}
                                             </td>
                                             <td>
-                                                <span className='text-primary-600 fw-medium'>{brand.name}</span>
-                                            </td>
-                                            <td>
-                                                <code className='text-secondary-light'>{brand.slug}</code>
-                                            </td>
-                                            <td>
-                                                {brand.website ? (
-                                                    <a href={brand.website} target='_blank' rel='noopener noreferrer' className='text-primary-600 text-decoration-none'>
-                                                        <Icon icon='mdi:link-variant' className='me-1' />
-                                                        Visit
-                                                    </a>
-                                                ) : (
-                                                    <span className='text-secondary-light'>—</span>
-                                                )}
-                                            </td>
-                                            <td>
-                                                <div className='form-check form-switch'>
-                                                    <input
-                                                        className='form-check-input'
-                                                        type='checkbox'
-                                                        role='switch'
-                                                        checked={brand.isFeatured}
-                                                        onChange={() => handleToggleFeatured(brand._id, brand.isFeatured)}
-                                                    />
+                                                <div className='d-flex flex-column'>
+                                                    <span className='text-dark fw-semibold mb-1'>{brand.name}</span>
+                                                    <code className='text-secondary-light text-xs'>{brand.slug}</code>
                                                 </div>
                                             </td>
                                             <td>
-                                                <div className='form-check form-switch'>
-                                                    <input
-                                                        className='form-check-input'
-                                                        type='checkbox'
-                                                        role='switch'
-                                                        checked={brand.status}
-                                                        onChange={() => handleToggleStatus(brand._id, brand.status)}
-                                                    />
+                                                <div className='d-flex align-items-center gap-2'>
+                                                    <div className='form-check form-switch'>
+                                                        <input
+                                                            className='form-check-input'
+                                                            type='checkbox'
+                                                            role='switch'
+                                                            checked={brand.status}
+                                                            onChange={() => handleToggleStatus(brand._id, brand.status)}
+                                                            style={{ width: '44px', height: '24px', cursor: 'pointer' }}
+                                                        />
+                                                    </div>
+                                                    <span className={`badge text-sm px-2 py-1 ${brand.status ? 'bg-success-600 text-white' : 'bg-secondary-200 text-secondary-600'}`}>
+                                                        {brand.status ? 'Active' : 'Inactive'}
+                                                    </span>
                                                 </div>
                                             </td>
                                             <td className='text-center'>
                                                 <div className='d-flex align-items-center gap-2 justify-content-center'>
                                                     <button
-                                                        className='btn btn-sm btn-outline-primary-600'
+                                                        className='btn btn-sm btn-primary-600 d-flex align-items-center gap-1'
                                                         onClick={() => navigate(`/edit-brand/${brand._id}`)}
-                                                        title='Edit'
+                                                        title='Edit Brand'
                                                     >
-                                                        <Icon icon='lucide:edit' />
+                                                        <Icon icon='lucide:edit' className='text-lg' />
                                                     </button>
                                                     <button
-                                                        className='btn btn-sm btn-outline-danger-600'
+                                                        className='btn btn-sm btn-danger-600 d-flex align-items-center gap-1'
                                                         onClick={() => {
                                                             setDeleteId(brand._id);
                                                             setShowDeleteModal(true);
                                                         }}
-                                                        title='Delete'
+                                                        title='Delete Brand'
                                                     >
-                                                        <Icon icon='fluent:delete-24-regular' />
+                                                        <Icon icon='fluent:delete-24-regular' className='text-lg' />
                                                     </button>
                                                 </div>
                                             </td>

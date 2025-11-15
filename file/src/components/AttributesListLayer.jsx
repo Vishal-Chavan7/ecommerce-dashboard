@@ -81,20 +81,21 @@ const AttributesListLayer = () => {
                 <div className='card-header d-flex flex-wrap align-items-center justify-content-between gap-3'>
                     <div className='d-flex flex-wrap align-items-center gap-3'>
                         <div className='d-flex align-items-center gap-2'>
-                            <span>Show</span>
-                            <select className='form-select form-select-sm w-auto'>
+                            <span style={{ fontSize: '15px', minWidth: 'fit-content' }}>Show</span>
+                            <select className='form-select form-select-sm' style={{ width: 'auto', minWidth: '70px', fontSize: '15px', padding: '8px 12px' }}>
                                 <option value='10'>10</option>
                                 <option value='25'>25</option>
                                 <option value='50'>50</option>
                                 <option value='100'>100</option>
                             </select>
-                            <span>entries</span>
+                            <span style={{ fontSize: '15px', minWidth: 'fit-content' }}>entries</span>
                         </div>
 
                         <select
-                            className='form-select form-select-sm w-auto'
+                            className='form-select form-select-sm'
                             value={filterType}
                             onChange={(e) => setFilterType(e.target.value)}
+                            style={{ width: 'auto', minWidth: '150px', fontSize: '15px', padding: '8px 12px' }}
                         >
                             <option value='all'>All Types</option>
                             <option value='attribute'>Attributes Only</option>
@@ -106,10 +107,11 @@ const AttributesListLayer = () => {
                         <div className='icon-field'>
                             <input
                                 type='text'
-                                className='form-control form-control-sm w-auto'
+                                className='form-control form-control-sm'
                                 placeholder='Search...'
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
+                                style={{ width: 'auto', minWidth: '200px', fontSize: '15px', padding: '8px 12px' }}
                             />
                             <span className='icon'>
                                 <Icon icon='ion:search-outline' />
@@ -117,10 +119,11 @@ const AttributesListLayer = () => {
                         </div>
 
                         <button
-                            className='btn btn-primary-600 btn-sm'
+                            className='btn btn-primary-600 btn-sm d-flex align-items-center'
                             onClick={() => navigate('/add-attribute')}
+                            style={{ fontSize: '15px', padding: '8px 16px', minWidth: 'fit-content' }}
                         >
-                            <Icon icon='ph:plus' className='me-1' />
+                            <Icon icon='ph:plus' className='me-1' style={{ fontSize: '18px' }} />
                             Add New Attribute
                         </button>
                     </div>
@@ -130,28 +133,27 @@ const AttributesListLayer = () => {
                     <div className='table-responsive'>
                         <table className='table bordered-table mb-0'>
                             <thead>
-                                <tr>
-                                    <th scope='col'>
+                                <tr style={{ fontSize: '15px' }}>
+                                    <th scope='col' style={{ width: '50px' }}>
                                         <div className='form-check'>
                                             <input className='form-check-input' type='checkbox' />
                                         </div>
                                     </th>
-                                    <th scope='col'>Name</th>
-                                    <th scope='col'>Slug</th>
-                                    <th scope='col'>Type</th>
-                                    <th scope='col'>Values Count</th>
-                                    <th scope='col'>Is Filter</th>
-                                    <th scope='col'>Status</th>
-                                    <th scope='col' className='text-center'>Action</th>
+                                    <th scope='col' className='fw-semibold'>Name</th>
+                                    <th scope='col' className='fw-semibold'>Slug</th>
+                                    <th scope='col' className='fw-semibold'>Type</th>
+                                    <th scope='col' className='fw-semibold'>Values Count</th>
+                                    <th scope='col' className='fw-semibold'>Status</th>
+                                    <th scope='col' className='text-center fw-semibold'>Action</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody style={{ fontSize: '15px' }}>
                                 {filteredAttributes.length === 0 ? (
                                     <tr>
-                                        <td colSpan='8' className='text-center py-4'>
+                                        <td colSpan='7' className='text-center py-4'>
                                             <div className='d-flex flex-column align-items-center gap-2'>
                                                 <Icon icon='mdi:filter-off-outline' className='text-secondary-light' style={{ fontSize: '48px' }} />
-                                                <p className='mb-0 text-secondary-light'>No attributes found</p>
+                                                <p className='mb-0 text-secondary-light' style={{ fontSize: '15px' }}>No attributes found</p>
                                             </div>
                                         </td>
                                     </tr>
@@ -164,65 +166,62 @@ const AttributesListLayer = () => {
                                                 </div>
                                             </td>
                                             <td>
-                                                <span className='text-primary-600 fw-medium'>{attr.name}</span>
+                                                <span className='text-primary-600 fw-medium' style={{ fontSize: '15px' }}>{attr.name}</span>
                                             </td>
                                             <td>
-                                                <code className='text-secondary-light'>{attr.slug}</code>
+                                                <code className='text-secondary-light' style={{ fontSize: '14px' }}>{attr.slug}</code>
                                             </td>
                                             <td>
-                                                <span className='badge text-sm text-capitalize' style={{
+                                                <span className='badge text-capitalize' style={{
                                                     backgroundColor: attr.type === 'select' ? '#e0f2fe' : attr.type === 'multiselect' ? '#e0e7ff' : '#fef3c7',
-                                                    color: attr.type === 'select' ? '#0369a1' : attr.type === 'multiselect' ? '#4338ca' : '#b45309'
+                                                    color: attr.type === 'select' ? '#0369a1' : attr.type === 'multiselect' ? '#4338ca' : '#b45309',
+                                                    fontSize: '13px'
                                                 }}>
                                                     {attr.type}
                                                 </span>
                                             </td>
                                             <td>
-                                                <span className='badge bg-neutral-200 text-neutral-900 text-sm'>
+                                                <span className='badge bg-neutral-200 text-neutral-900' style={{ fontSize: '13px' }}>
                                                     {attr.values?.length || 0} values
                                                 </span>
                                             </td>
                                             <td>
-                                                {attr.isFilter ? (
-                                                    <span className='badge bg-success-100 text-success-600 text-sm'>
-                                                        <Icon icon='mdi:filter-check' className='me-1' />
-                                                        Yes
+                                                <div className='d-flex align-items-center gap-2'>
+                                                    <div className='form-check form-switch'>
+                                                        <input
+                                                            className='form-check-input'
+                                                            type='checkbox'
+                                                            role='switch'
+                                                            checked={attr.status}
+                                                            onChange={() => handleToggleStatus(attr._id, attr.status)}
+                                                            style={{ width: '48px', height: '26px', cursor: 'pointer' }}
+                                                        />
+                                                    </div>
+                                                    <span className={`badge px-2 py-1 ${attr.status ? 'bg-success-600 text-white' : 'bg-secondary-200 text-secondary-600'}`} style={{ fontSize: '13px', minWidth: '70px' }}>
+                                                        {attr.status ? 'Active' : 'Inactive'}
                                                     </span>
-                                                ) : (
-                                                    <span className='badge bg-neutral-200 text-neutral-600 text-sm'>
-                                                        No
-                                                    </span>
-                                                )}
-                                            </td>
-                                            <td>
-                                                <div className='form-check form-switch'>
-                                                    <input
-                                                        className='form-check-input'
-                                                        type='checkbox'
-                                                        role='switch'
-                                                        checked={attr.status}
-                                                        onChange={() => handleToggleStatus(attr._id, attr.status)}
-                                                    />
                                                 </div>
                                             </td>
                                             <td className='text-center'>
                                                 <div className='d-flex align-items-center gap-2 justify-content-center'>
                                                     <button
-                                                        className='btn btn-sm btn-outline-primary-600'
-                                                        onClick={() => navigate(/edit-attribute/)}
+                                                        className='btn btn-sm btn-outline-primary-600 d-flex align-items-center justify-content-center'
+                                                        onClick={() => navigate(`/edit-attribute/${attr._id}`)}
                                                         title='Edit'
+                                                        style={{ padding: '8px 14px' }}
                                                     >
-                                                        <Icon icon='lucide:edit' />
+                                                        <Icon icon='lucide:edit' style={{ fontSize: '18px' }} />
                                                     </button>
                                                     <button
-                                                        className='btn btn-sm btn-outline-danger-600'
+                                                        className='btn btn-sm btn-outline-danger-600 d-flex align-items-center justify-content-center'
                                                         onClick={() => {
                                                             setDeleteId(attr._id);
                                                             setShowDeleteModal(true);
                                                         }}
                                                         title='Delete'
+                                                        style={{ padding: '8px 14px' }}
                                                     >
-                                                        <Icon icon='fluent:delete-24-regular' />
+                                                        <Icon icon='fluent:delete-24-regular' style={{ fontSize: '18px' }} />
                                                     </button>
                                                 </div>
                                             </td>
@@ -233,25 +232,25 @@ const AttributesListLayer = () => {
                         </table>
                     </div>
 
-                    <div className='d-flex flex-wrap align-items-center justify-content-between gap-2 mt-3'>
-                        <span className='text-secondary-light'>
+                    <div className='d-flex flex-wrap align-items-center justify-content-between gap-3 mt-3'>
+                        <span className='text-secondary-light' style={{ fontSize: '15px', minWidth: 'fit-content' }}>
                             Showing {filteredAttributes.length} of {attributes.length} entries
                         </span>
-                        <ul className='pagination d-flex flex-wrap align-items-center gap-2 justify-content-center'>
+                        <ul className='pagination d-flex flex-wrap align-items-center gap-2 justify-content-center mb-0'>
                             <li className='page-item'>
-                                <a className='page-link bg-neutral-200 text-secondary-light fw-medium radius-8 border-0 px-10 py-10 d-flex align-items-center justify-content-center h-32-px' href='#'>
-                                    <Icon icon='ep:d-arrow-left' />
+                                <a className='page-link bg-neutral-200 text-secondary-light fw-medium radius-8 border-0 d-flex align-items-center justify-content-center' style={{ width: '36px', height: '36px', padding: '8px' }} href='#'>
+                                    <Icon icon='ep:d-arrow-left' style={{ fontSize: '18px' }} />
                                 </a>
                             </li>
                             <li className='page-item'>
-                                <a className='page-link text-secondary-light fw-medium radius-8 border-0 px-10 py-10 bg-primary-600 text-white d-flex align-items-center justify-content-center h-32-px' href='#'>1</a>
+                                <a className='page-link text-white fw-medium radius-8 border-0 bg-primary-600 d-flex align-items-center justify-content-center' style={{ width: '36px', height: '36px', padding: '8px', fontSize: '15px' }} href='#'>1</a>
                             </li>
                             <li className='page-item'>
-                                <a className='page-link bg-neutral-200 text-secondary-light fw-medium radius-8 border-0 px-10 py-10 d-flex align-items-center justify-content-center h-32-px' href='#'>2</a>
+                                <a className='page-link bg-neutral-200 text-secondary-light fw-medium radius-8 border-0 d-flex align-items-center justify-content-center' style={{ width: '36px', height: '36px', padding: '8px', fontSize: '15px' }} href='#'>2</a>
                             </li>
                             <li className='page-item'>
-                                <a className='page-link bg-neutral-200 text-secondary-light fw-medium radius-8 border-0 px-10 py-10 d-flex align-items-center justify-content-center h-32-px' href='#'>
-                                    <Icon icon='ep:d-arrow-right' />
+                                <a className='page-link bg-neutral-200 text-secondary-light fw-medium radius-8 border-0 d-flex align-items-center justify-content-center' style={{ width: '36px', height: '36px', padding: '8px' }} href='#'>
+                                    <Icon icon='ep:d-arrow-right' style={{ fontSize: '18px' }} />
                                 </a>
                             </li>
                         </ul>
@@ -264,8 +263,8 @@ const AttributesListLayer = () => {
                 <div className='modal fade show d-block' style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
                     <div className='modal-dialog modal-dialog-centered'>
                         <div className='modal-content'>
-                            <div className='modal-header'>
-                                <h5 className='modal-title'>Confirm Delete</h5>
+                            <div className='modal-header border-0'>
+                                <h5 className='modal-title' style={{ fontSize: '19px' }}>Confirm Delete</h5>
                                 <button
                                     type='button'
                                     className='btn-close'
@@ -275,25 +274,31 @@ const AttributesListLayer = () => {
                                     }}
                                 ></button>
                             </div>
-                            <div className='modal-body'>
-                                <p>Are you sure you want to delete this attribute? This action cannot be undone.</p>
+                            <div className='modal-body text-center py-4'>
+                                <Icon icon='mdi:alert-circle' style={{ fontSize: '64px', color: '#dc3545' }} />
+                                <h5 className='mt-3' style={{ fontSize: '19px' }}>Are you sure?</h5>
+                                <p style={{ fontSize: '15px' }}>Are you sure you want to delete this attribute? This action cannot be undone.</p>
                             </div>
-                            <div className='modal-footer'>
+                            <div className='modal-footer border-0 justify-content-center gap-2'>
                                 <button
                                     type='button'
-                                    className='btn btn-secondary-600'
+                                    className='btn btn-secondary-600 d-flex align-items-center px-4 py-2'
                                     onClick={() => {
                                         setShowDeleteModal(false);
                                         setDeleteId(null);
                                     }}
+                                    style={{ fontSize: '15px' }}
                                 >
+                                    <Icon icon='mdi:close' className='me-2' style={{ fontSize: '20px' }} />
                                     Cancel
                                 </button>
                                 <button
                                     type='button'
-                                    className='btn btn-danger-600'
+                                    className='btn btn-danger-600 d-flex align-items-center px-4 py-2'
                                     onClick={handleDelete}
+                                    style={{ fontSize: '15px' }}
                                 >
+                                    <Icon icon='fluent:delete-24-regular' className='me-2' style={{ fontSize: '20px' }} />
                                     Delete
                                 </button>
                             </div>

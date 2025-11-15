@@ -167,27 +167,84 @@ const AddEditAttributeLayer = () => {
                                     {formData.type === 'multiselect' && 'Users can select multiple options'}
                                 </div>
                             </div>
-                            <div className='col-md-3'>
-                                <label className='form-label d-block'>Options</label>
-                                <div className='form-check form-switch'>
-                                    <input className='form-check-input' type='checkbox' role='switch' id='isFilter' checked={formData.isFilter} onChange={(e) => setFormData({ ...formData, isFilter: e.target.checked })} />
-                                    <label className='form-check-label' htmlFor='isFilter'>Use as Filter</label>
+                        </div>
+                    </div>
+
+                    {/* Options and Status Section */}
+                    <div className='mb-4'>
+                        <h6 className='mb-3 mt-2'>Settings</h6>
+                        <div className='row g-3'>
+                            {/* Use as Filter Option */}
+                            <div className='col-md-6'>
+                                <div className='card shadow-sm border-0 bg-neutral-50 p-20 radius-8'>
+                                    <div className='d-flex align-items-center justify-content-between gap-4'>
+                                        <div className='flex-grow-1'>
+                                            <div className='d-flex align-items-center gap-2 mb-2'>
+                                                <h6 className='text-md mb-0'>Use as Filter</h6>
+                                                <span className={`badge text-sm px-2 py-1 ${formData.isFilter ? 'bg-success-600' : 'bg-secondary-600'}`}>
+                                                    {formData.isFilter ? 'Enabled' : 'Disabled'}
+                                                </span>
+                                            </div>
+                                            <p className='text-secondary-light text-sm mb-0'>
+                                                {formData.isFilter
+                                                    ? 'This attribute will appear in product filters'
+                                                    : 'This attribute will not appear in filters'}
+                                            </p>
+                                        </div>
+                                        <div className='form-check form-switch pe-3'>
+                                            <input
+                                                className='form-check-input'
+                                                type='checkbox'
+                                                role='switch'
+                                                id='isFilter'
+                                                checked={formData.isFilter}
+                                                onChange={(e) => setFormData({ ...formData, isFilter: e.target.checked })}
+                                                style={{ width: '52px', height: '28px', cursor: 'pointer' }}
+                                            />
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div className='col-md-3'>
-                                <label className='form-label d-block'>Status</label>
-                                <div className='form-check form-switch'>
-                                    <input className='form-check-input' type='checkbox' role='switch' id='status' checked={formData.status} onChange={(e) => setFormData({ ...formData, status: e.target.checked })} />
-                                    <label className='form-check-label' htmlFor='status'>Active</label>
+
+                            {/* Status Toggle */}
+                            <div className='col-md-6'>
+                                <div className='card shadow-sm border-0 bg-neutral-50 p-20 radius-8'>
+                                    <div className='d-flex align-items-center justify-content-between gap-4'>
+                                        <div className='flex-grow-1'>
+                                            <div className='d-flex align-items-center gap-2 mb-2'>
+                                                <h6 className='text-md  mt-10 mb-0'>Attribute Status</h6>
+                                                <span className={`badge text-sm px-2 py-1 ${formData.status ? 'bg-success-600' : 'bg-secondary-600'}`}>
+                                                    {formData.status ? 'Active' : 'Inactive'}
+                                                </span>
+                                            </div>
+                                            <p className='text-secondary-light text-sm mb-0'>
+                                                {formData.status
+                                                    ? 'This attribute is active and available for use'
+                                                    : 'This attribute is inactive and hidden from products'}
+                                            </p>
+                                        </div>
+                                        <div className='form-check form-switch pe-3'>
+                                            <input
+                                                className='form-check-input'
+                                                type='checkbox'
+                                                role='switch'
+                                                id='status'
+                                                checked={formData.status}
+                                                onChange={(e) => setFormData({ ...formData, status: e.target.checked })}
+                                                style={{ width: '52px', height: '28px', cursor: 'pointer' }}
+                                            />
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+
                     {needsValues && (
                         <div className='mb-4'>
                             <div className='d-flex align-items-center justify-content-between mb-3'>
                                 <div>
-                                    <h6 className='mb-1'>Attribute Values</h6>
+                                    <h6 className='mb-1 mt-2'>Attribute Values</h6>
                                     <p className='text-secondary-light text-sm mb-0'>Define the available options for this attribute</p>
                                 </div>
                                 <button type='button' onClick={handleAddValue} className='btn btn-primary-600 btn-sm d-flex align-items-center gap-2'>

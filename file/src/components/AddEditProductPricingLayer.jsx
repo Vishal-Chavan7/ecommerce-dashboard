@@ -240,6 +240,7 @@ const AddEditProductPricingLayer = () => {
                                     value={formData.productId}
                                     onChange={handleChange}
                                     disabled={loading}
+                                    style={{ minWidth: '100%' }}
                                 >
                                     <option value="">Select a product</option>
                                     {products.map(product => (
@@ -264,6 +265,7 @@ const AddEditProductPricingLayer = () => {
                                     value={formData.variantId}
                                     onChange={handleChange}
                                     disabled={loading || !formData.productId}
+                                    style={{ minWidth: '100%' }}
                                 >
                                     <option value="">No Variant (Product Level)</option>
                                     {productVariants.map(variant => (
@@ -304,9 +306,9 @@ const AddEditProductPricingLayer = () => {
                                     Discount Type
                                 </label>
                                 <div className="d-flex gap-3">
-                                    <div className="form-check">
+                                    <div className="form-check d-flex align-items-center">
                                         <input
-                                            className="form-check-input"
+                                            className="form-check-input mt-0 me-2"
                                             type="radio"
                                             name="discountType"
                                             id="flat"
@@ -315,13 +317,13 @@ const AddEditProductPricingLayer = () => {
                                             onChange={handleChange}
                                             disabled={loading}
                                         />
-                                        <label className="form-check-label" htmlFor="flat">
+                                        <label className="form-check-label mb-0" htmlFor="flat">
                                             Flat Amount
                                         </label>
                                     </div>
-                                    <div className="form-check">
+                                    <div className="form-check d-flex align-items-center">
                                         <input
-                                            className="form-check-input"
+                                            className="form-check-input mt-0 me-2"
                                             type="radio"
                                             name="discountType"
                                             id="percent"
@@ -330,7 +332,7 @@ const AddEditProductPricingLayer = () => {
                                             onChange={handleChange}
                                             disabled={loading}
                                         />
-                                        <label className="form-check-label" htmlFor="percent">
+                                        <label className="form-check-label mb-0" htmlFor="percent">
                                             Percentage (%)
                                         </label>
                                     </div>
@@ -385,40 +387,57 @@ const AddEditProductPricingLayer = () => {
 
                             {/* Status */}
                             <div className="mb-20">
-                                <div className="form-check form-switch">
-                                    <input
-                                        className="form-check-input"
-                                        type="checkbox"
-                                        role="switch"
-                                        id="status"
-                                        name="status"
-                                        checked={formData.status}
-                                        onChange={handleChange}
-                                        disabled={loading}
-                                    />
-                                    <label className="form-check-label" htmlFor="status">
-                                        Active Status
-                                    </label>
-                                </div>
-                                <div className="form-text">
-                                    Only active pricing will be used in the store
+                                <h6 className="mb-3">Pricing Status</h6>
+                                <div className="card border shadow-none bg-light">
+                                    <div className="card-body p-3">
+                                        <div className="d-flex align-items-center justify-content-between">
+                                            <div>
+                                                <label className="form-label fw-semibold mb-1">
+                                                    Active Status
+                                                </label>
+                                                <p className="text-sm text-secondary mb-0">
+                                                    {formData.status
+                                                        ? 'This pricing is active and will be used in the store'
+                                                        : 'This pricing is inactive and will not be applied'}
+                                                </p>
+                                            </div>
+                                            <div className="d-flex align-items-center gap-3">
+                                                <span className={`badge ${formData.status ? 'bg-success' : 'bg-secondary'} px-3 py-2`}>
+                                                    {formData.status ? 'Active' : 'Inactive'}
+                                                </span>
+                                                <div className="form-check form-switch form-switch-lg m-0">
+                                                    <input
+                                                        className="form-check-input"
+                                                        type="checkbox"
+                                                        role="switch"
+                                                        id="status"
+                                                        name="status"
+                                                        checked={formData.status}
+                                                        onChange={handleChange}
+                                                        disabled={loading}
+                                                        style={{ width: '48px', height: '24px', cursor: 'pointer' }}
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
                             {/* Action Buttons */}
-                            <div className="d-flex align-items-center justify-content-center gap-3 mt-24">
+                            <div className="d-flex align-items-center justify-content-end gap-3 mt-4">
                                 <button
                                     type="button"
-                                    className="btn btn-outline-danger-600 border border-danger-600 text-md px-40 py-11 radius-8"
+                                    className="btn btn-outline-danger text-danger-600 border-danger-600 d-flex align-items-center px-4 py-2"
                                     onClick={() => navigate('/product-pricing-list')}
                                     disabled={loading}
                                 >
-                                    <Icon icon="mdi:cancel" className="me-2" />
+                                    <Icon icon="mdi:cancel" className="me-2" style={{ fontSize: '18px' }} />
                                     Cancel
                                 </button>
                                 <button
                                     type="submit"
-                                    className="btn btn-primary-600 text-md px-40 py-11 radius-8"
+                                    className="btn btn-primary-600 d-flex align-items-center px-4 py-2"
                                     disabled={loading}
                                 >
                                     {loading ? (
@@ -428,7 +447,7 @@ const AddEditProductPricingLayer = () => {
                                         </>
                                     ) : (
                                         <>
-                                            <Icon icon="material-symbols:save" className="me-2" />
+                                            <Icon icon="material-symbols:save" className="me-2" style={{ fontSize: '18px' }} />
                                             {isEditMode ? 'Update Pricing' : 'Create Pricing'}
                                         </>
                                     )}

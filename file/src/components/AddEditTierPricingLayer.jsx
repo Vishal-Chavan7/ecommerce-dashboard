@@ -235,6 +235,7 @@ const AddEditTierPricingLayer = () => {
                                         value={formData.productId}
                                         onChange={handleInputChange}
                                         disabled={loading}
+                                        style={{ minWidth: '100%' }}
                                     >
                                         <option value="">Select a product</option>
                                         {products.map(product => (
@@ -263,6 +264,7 @@ const AddEditTierPricingLayer = () => {
                                         value={formData.variantId}
                                         onChange={handleInputChange}
                                         disabled={!formData.productId || loading}
+                                        style={{ minWidth: '100%' }}
                                     >
                                         <option value="">No specific variant (applies to all)</option>
                                         {filteredVariants.map(variant => (
@@ -279,9 +281,9 @@ const AddEditTierPricingLayer = () => {
                                 {/* Quantity Range */}
                                 <div className="row mb-4">
                                     <div className="col-md-6">
-                                        <label className="form-label fw-semibold">
-                                            <Icon icon="mdi:package-variant" className="me-2" />
-                                            Minimum Quantity <span className="text-danger">*</span>
+                                        <label className="form-label fw-semibold d-flex align-items-center" style={{ fontSize: '15px' }}>
+                                            <Icon icon="mdi:package-variant" className="me-2" style={{ fontSize: '18px' }} />
+                                            Minimum Quantity <span className="text-danger ms-1">*</span>
                                         </label>
                                         <input
                                             type="number"
@@ -292,17 +294,18 @@ const AddEditTierPricingLayer = () => {
                                             placeholder="e.g., 5"
                                             min="1"
                                             disabled={loading}
+                                            style={{ fontSize: '14px', padding: '10px 12px' }}
                                         />
                                         {validationErrors.minQty && (
-                                            <div className="invalid-feedback">{validationErrors.minQty}</div>
+                                            <div className="invalid-feedback" style={{ fontSize: '13px' }}>{validationErrors.minQty}</div>
                                         )}
-                                        <small className="text-muted">Starting quantity for this tier</small>
+                                        <small className="text-muted d-block mt-2" style={{ fontSize: '13px' }}>Starting quantity for this tier</small>
                                     </div>
 
                                     <div className="col-md-6">
-                                        <label className="form-label fw-semibold">
-                                            <Icon icon="mdi:package-variant-closed" className="me-2" />
-                                            Maximum Quantity <span className="text-danger">*</span>
+                                        <label className="form-label fw-semibold d-flex align-items-center" style={{ fontSize: '15px' }}>
+                                            <Icon icon="mdi:package-variant-closed" className="me-2" style={{ fontSize: '18px' }} />
+                                            Maximum Quantity <span className="text-danger ms-1">*</span>
                                         </label>
                                         <input
                                             type="number"
@@ -313,27 +316,30 @@ const AddEditTierPricingLayer = () => {
                                             placeholder="e.g., 10 or 999999 for unlimited"
                                             min="1"
                                             disabled={loading}
+                                            style={{ fontSize: '14px', padding: '10px 12px' }}
                                         />
                                         {validationErrors.maxQty && (
-                                            <div className="invalid-feedback">{validationErrors.maxQty}</div>
+                                            <div className="invalid-feedback" style={{ fontSize: '13px' }}>{validationErrors.maxQty}</div>
                                         )}
-                                        <small className="text-muted">Ending quantity (use 999999 for unlimited)</small>
+                                        <small className="text-muted d-block mt-2" style={{ fontSize: '13px' }}>Ending quantity (use 999999 for unlimited)</small>
                                     </div>
                                 </div>
 
                                 {/* Quantity Range Preview */}
                                 {formData.minQty && formData.maxQty && (
-                                    <div className="alert alert-info mb-4">
-                                        <Icon icon="mdi:information" className="me-2" />
-                                        <strong>Quantity Range:</strong> {formData.minQty} - {formData.maxQty >= 999999 ? '∞' : formData.maxQty} units
+                                    <div className="alert alert-info mb-4 d-flex align-items-center">
+                                        <Icon icon="mdi:information" className="me-2" style={{ fontSize: '20px' }} />
+                                        <span style={{ fontSize: '14px' }}>
+                                            <strong>Quantity Range:</strong> {formData.minQty} - {formData.maxQty >= 999999 ? '∞' : formData.maxQty} units
+                                        </span>
                                     </div>
                                 )}
 
                                 {/* Tier Price */}
                                 <div className="mb-4">
-                                    <label className="form-label fw-semibold">
-                                        <Icon icon="mdi:currency-inr" className="me-2" />
-                                        Tier Price <span className="text-danger">*</span>
+                                    <label className="form-label fw-semibold d-flex align-items-center" style={{ fontSize: '15px' }}>
+                                        <Icon icon="mdi:currency-inr" className="me-2" style={{ fontSize: '18px' }} />
+                                        Tier Price <span className="text-danger ms-1">*</span>
                                     </label>
                                     <input
                                         type="number"
@@ -345,11 +351,12 @@ const AddEditTierPricingLayer = () => {
                                         step="0.01"
                                         min="0"
                                         disabled={loading}
+                                        style={{ fontSize: '14px', padding: '10px 12px' }}
                                     />
                                     {validationErrors.price && (
-                                        <div className="invalid-feedback">{validationErrors.price}</div>
+                                        <div className="invalid-feedback" style={{ fontSize: '13px' }}>{validationErrors.price}</div>
                                     )}
-                                    <small className="text-muted">
+                                    <small className="text-muted d-block mt-2" style={{ fontSize: '13px' }}>
                                         Price per unit when quantity is in this tier range
                                     </small>
                                 </div>
@@ -357,25 +364,25 @@ const AddEditTierPricingLayer = () => {
                                 {/* Discount Calculator */}
                                 {formData.productId && formData.price && calculateDiscount() && (
                                     <div className="alert alert-success mb-4">
-                                        <h6 className="alert-heading">
-                                            <Icon icon="mdi:calculator" className="me-2" />
+                                        <h6 className="alert-heading d-flex align-items-center" style={{ fontSize: '16px' }}>
+                                            <Icon icon="mdi:calculator" className="me-2" style={{ fontSize: '20px' }} />
                                             Discount Calculation
                                         </h6>
                                         <hr />
                                         <div className="row">
                                             <div className="col-md-4">
-                                                <small className="text-muted">Regular Price</small>
-                                                <div className="h5">₹{getPricingInfo().regularPrice.toFixed(2)}</div>
+                                                <small className="text-muted" style={{ fontSize: '13px' }}>Regular Price</small>
+                                                <div className="h5" style={{ fontSize: '20px' }}>₹{getPricingInfo().regularPrice.toFixed(2)}</div>
                                             </div>
                                             <div className="col-md-4">
-                                                <small className="text-muted">Tier Price</small>
-                                                <div className="h5 text-success">₹{parseFloat(formData.price).toFixed(2)}</div>
+                                                <small className="text-muted" style={{ fontSize: '13px' }}>Tier Price</small>
+                                                <div className="h5 text-success" style={{ fontSize: '20px' }}>₹{parseFloat(formData.price).toFixed(2)}</div>
                                             </div>
                                             <div className="col-md-4">
-                                                <small className="text-muted">Discount</small>
-                                                <div className="h5 text-danger">
+                                                <small className="text-muted" style={{ fontSize: '13px' }}>Discount</small>
+                                                <div className="h5 text-danger" style={{ fontSize: '20px' }}>
                                                     -{calculateDiscount().percentage}%
-                                                    <small className="ms-2">(₹{calculateDiscount().discount})</small>
+                                                    <small className="ms-2" style={{ fontSize: '14px' }}>(₹{calculateDiscount().discount})</small>
                                                 </div>
                                             </div>
                                         </div>
@@ -383,10 +390,19 @@ const AddEditTierPricingLayer = () => {
                                 )}
 
                                 {/* Action Buttons */}
-                                <div className="d-flex gap-2">
+                                <div className="d-flex justify-content-end gap-3 mt-4">
+                                    <button
+                                        type="button"
+                                        className="btn btn-secondary d-flex align-items-center px-4 py-2"
+                                        onClick={() => navigate('/tier-pricing-list')}
+                                        disabled={loading}
+                                    >
+                                        <Icon icon="mdi:close" className="me-2" style={{ fontSize: '18px' }} />
+                                        Cancel
+                                    </button>
                                     <button
                                         type="submit"
-                                        className="btn btn-primary"
+                                        className="btn btn-primary d-flex align-items-center px-4 py-2"
                                         disabled={loading}
                                     >
                                         {loading ? (
@@ -396,19 +412,10 @@ const AddEditTierPricingLayer = () => {
                                             </>
                                         ) : (
                                             <>
-                                                <Icon icon="mdi:content-save" className="me-2" />
+                                                <Icon icon="mdi:content-save" className="me-2" style={{ fontSize: '18px' }} />
                                                 {isEditMode ? 'Update Tier Pricing' : 'Create Tier Pricing'}
                                             </>
                                         )}
-                                    </button>
-                                    <button
-                                        type="button"
-                                        className="btn btn-secondary"
-                                        onClick={() => navigate('/tier-pricing-list')}
-                                        disabled={loading}
-                                    >
-                                        <Icon icon="mdi:close" className="me-2" />
-                                        Cancel
                                     </button>
                                 </div>
                             </form>

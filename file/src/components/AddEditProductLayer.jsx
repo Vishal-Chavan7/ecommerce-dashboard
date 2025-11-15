@@ -22,10 +22,11 @@ const AddEditProductLayer = () => {
         sku: '',
         thumbnail: '',
         status: true,
-        isFeatured: false,
         tags: []
     });
     const [tagInput, setTagInput] = useState('');
+    const [thumbnailFile, setThumbnailFile] = useState(null);
+    const [thumbnailPreview, setThumbnailPreview] = useState('');
 
     useEffect(() => {
         fetchBrands();
@@ -70,9 +71,13 @@ const AddEditProductLayer = () => {
                 sku: product.sku,
                 thumbnail: product.thumbnail || '',
                 status: product.status,
-                isFeatured: product.isFeatured,
                 tags: product.tags || []
             });
+
+            // Set preview if thumbnail exists
+            if (product.thumbnail) {
+                setThumbnailPreview(product.thumbnail);
+            }
         } catch (error) {
             console.error('Error fetching product:', error);
             toast.error('Failed to load product');
@@ -82,13 +87,25 @@ const AddEditProductLayer = () => {
         }
     };
 
-    const handleTitleChange = (e) => {
-        const title = e.target.value;
-        setFormData({
-            ...formData,
-            title,
-            slug: title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
-        });
+    const handleChange = (e) => {
+        const { name, value, type, checked } = e.target;
+
+        // Special handling for slug field - only lowercase letters and numbers
+        if (name === "slug") {
+            const sanitizedSlug = value
+                .toLowerCase()
+                .replace(/[^a-z0-9]/g, ""); // Remove any character that's not a-z or 0-9
+            setFormData((prev) => ({
+                ...prev,
+                slug: sanitizedSlug,
+            }));
+            return;
+        }
+
+        setFormData((prev) => ({
+            ...prev,
+            [name]: type === "checkbox" ? checked : value,
+        }));
     };
 
     const handleCategoryToggle = (categoryId) => {
@@ -119,6 +136,33 @@ const AddEditProductLayer = () => {
         }));
     };
 
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        // Validate file type
+        const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml', 'image/avif'];
+        if (!allowedTypes.includes(file.type)) {
+            toast.error('Invalid file type. Only JPEG, PNG, GIF, WEBP, SVG, and AVIF are allowed.');
+            return;
+        }
+
+        // Validate file size (5MB)
+        if (file.size > 5 * 1024 * 1024) {
+            toast.error('File size must be less than 5MB');
+            return;
+        }
+
+        setThumbnailFile(file);
+
+        // Create preview
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            setThumbnailPreview(reader.result);
+        };
+        reader.readAsDataURL(file);
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -144,15 +188,38 @@ const AddEditProductLayer = () => {
             return;
         }
 
-        const payload = { ...formData };
+        // Prepare form data for submission
+        const submitData = new FormData();
+        submitData.append('title', formData.title);
+        submitData.append('slug', formData.slug);
+        submitData.append('description', formData.description);
+        submitData.append('brandId', formData.brandId);
+        submitData.append('categoryIds', JSON.stringify(formData.categoryIds));
+        submitData.append('type', formData.type);
+        submitData.append('sku', formData.sku);
+        submitData.append('status', formData.status);
+        submitData.append('tags', JSON.stringify(formData.tags));
+
+        // Handle thumbnail file upload
+        if (thumbnailFile) {
+            submitData.append('thumbnail', thumbnailFile);
+        }
 
         try {
             setLoading(true);
             if (isEditMode) {
-                await api.put(`/admin/products/${id}`, payload);
+                await api.put(`/admin/products/${id}`, submitData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                });
                 toast.success('Product updated successfully');
             } else {
-                await api.post('/admin/products', payload);
+                await api.post('/admin/products', submitData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                });
                 toast.success('Product created successfully');
             }
             navigate('/products-list');
@@ -196,8 +263,9 @@ const AddEditProductLayer = () => {
                                 <input
                                     type='text'
                                     className='form-control'
+                                    name='title'
                                     value={formData.title}
-                                    onChange={handleTitleChange}
+                                    onChange={handleChange}
                                     placeholder='e.g., Samsung Galaxy S23'
                                     required
                                 />
@@ -227,13 +295,16 @@ const AddEditProductLayer = () => {
                                 <input
                                     type='text'
                                     className='form-control'
+                                    name='slug'
                                     value={formData.slug}
-                                    onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
-                                    placeholder='e.g., samsung-galaxy-s23'
+                                    onChange={handleChange}
+                                    pattern="[a-z0-9]+"
+                                    title="Only lowercase letters and numbers are allowed"
+                                    placeholder='e.g., samsunggalaxys23'
                                     required
                                 />
                                 <div className='form-text'>
-                                    URL-friendly version (auto-generated from title)
+                                    Only lowercase letters and numbers (e.g., samsunggalaxys23)
                                 </div>
                             </div>
 
@@ -299,25 +370,25 @@ const AddEditProductLayer = () => {
                                 <label className='form-label'>
                                     Categories <span className='text-danger'>*</span>
                                 </label>
-                                <div className='border rounded p-3' style={{ maxHeight: '200px', overflowY: 'auto' }}>
+                                <div className='border rounded p-3 bg-light' style={{ maxHeight: '250px', overflowY: 'auto' }}>
                                     {categories.length === 0 ? (
-                                        <div className='text-center text-secondary-light py-3'>
-                                            <Icon icon='mdi:alert' style={{ fontSize: '24px' }} />
-                                            <p className='mb-0 mt-2'>No categories available. Please create categories first.</p>
+                                        <div className='text-center text-secondary-light py-4'>
+                                            <Icon icon='mdi:alert-circle-outline' style={{ fontSize: '32px' }} className='text-warning' />
+                                            <p className='mb-0 mt-2 fw-medium'>No categories available. Please create categories first.</p>
                                         </div>
                                     ) : (
-                                        <div className='row g-2'>
+                                        <div className='row g-3'>
                                             {categories.map(category => (
-                                                <div key={category._id} className='col-md-4'>
-                                                    <div className='form-check'>
+                                                <div key={category._id} className='col-md-4 col-sm-6'>
+                                                    <div className='form-check p-3 border rounded bg-white d-flex align-items-center'>
                                                         <input
-                                                            className='form-check-input'
+                                                            className='form-check-input mt-0 me-2'
                                                             type='checkbox'
                                                             id={`cat-${category._id}`}
                                                             checked={formData.categoryIds.includes(category._id)}
                                                             onChange={() => handleCategoryToggle(category._id)}
                                                         />
-                                                        <label className='form-check-label' htmlFor={`cat-${category._id}`}>
+                                                        <label className='form-check-label fw-medium mb-0' htmlFor={`cat-${category._id}`}>
                                                             {category.name}
                                                         </label>
                                                     </div>
@@ -326,44 +397,41 @@ const AddEditProductLayer = () => {
                                         </div>
                                     )}
                                 </div>
-                                <div className='form-text'>
-                                    Selected: {formData.categoryIds.length} categories
+                                <div className='form-text mt-2'>
+                                    <Icon icon='mdi:information-outline' className='me-1' />
+                                    Selected: <span className='fw-semibold'>{formData.categoryIds.length}</span> {formData.categoryIds.length === 1 ? 'category' : 'categories'}
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     {/* Media & Tags */}
-                    <div className='mb-4'>
+                    <div className='mb-4 mt-3'>
                         <h6 className='mb-3'>Media & Tags</h6>
                         <div className='row g-3'>
                             <div className='col-md-12'>
-                                <label className='form-label'>Thumbnail Image URL</label>
+                                <label className='form-label'>Product Thumbnail</label>
                                 <input
-                                    type='url'
+                                    type='file'
                                     className='form-control'
-                                    value={formData.thumbnail}
-                                    onChange={(e) => setFormData({ ...formData, thumbnail: e.target.value })}
-                                    placeholder='https://cdn.com/products/image.jpg'
+                                    accept='image/*'
+                                    onChange={handleFileChange}
                                 />
                                 <div className='form-text'>
-                                    Enter a valid image URL for the product thumbnail
+                                    Supported: JPG, PNG, GIF, WEBP, SVG, AVIF (Max 5MB)
                                 </div>
                             </div>
 
-                            {formData.thumbnail && (
+                            {thumbnailPreview && (
                                 <div className='col-12'>
                                     <div className='border rounded p-3 bg-neutral-50 text-center'>
                                         <img
-                                            src={formData.thumbnail}
+                                            src={thumbnailPreview}
                                             alt='Thumbnail Preview'
                                             className='rounded'
                                             style={{ maxWidth: '200px', maxHeight: '150px', objectFit: 'contain' }}
-                                            onError={(e) => {
-                                                e.target.style.display = 'none';
-                                                toast.error('Invalid image URL');
-                                            }}
                                         />
+                                        <p className='text-sm text-secondary-light mt-2'>Thumbnail Preview</p>
                                     </div>
                                 </div>
                             )}
@@ -409,48 +477,51 @@ const AddEditProductLayer = () => {
                     </div>
 
                     {/* Product Settings */}
-                    <div className='mb-4'>
+                    <div className='mb-4 mt-3'>
                         <h6 className='mb-3'>Product Settings</h6>
                         <div className='row g-3'>
-                            <div className='col-md-6'>
-                                <div className='d-flex gap-4'>
-                                    <div className='form-check form-switch'>
-                                        <input
-                                            className='form-check-input'
-                                            type='checkbox'
-                                            role='switch'
-                                            id='status'
-                                            checked={formData.status}
-                                            onChange={(e) => setFormData({ ...formData, status: e.target.checked })}
-                                        />
-                                        <label className='form-check-label' htmlFor='status'>
-                                            Active Status
-                                        </label>
-                                    </div>
-
-                                    <div className='form-check form-switch'>
-                                        <input
-                                            className='form-check-input'
-                                            type='checkbox'
-                                            role='switch'
-                                            id='isFeatured'
-                                            checked={formData.isFeatured}
-                                            onChange={(e) => setFormData({ ...formData, isFeatured: e.target.checked })}
-                                        />
-                                        <label className='form-check-label' htmlFor='isFeatured'>
-                                            Featured Product
-                                        </label>
+                            <div className='col-12'>
+                                <div className='card border shadow-none bg-light'>
+                                    <div className='card-body p-3'>
+                                        <div className='d-flex align-items-center justify-content-between'>
+                                            <div>
+                                                <label className='form-label fw-semibold mb-1'>
+                                                    Product Status
+                                                </label>
+                                                <p className='text-sm text-secondary mb-0'>
+                                                    {formData.status
+                                                        ? 'This product is active and visible to customers'
+                                                        : 'This product is inactive and hidden from customers'}
+                                                </p>
+                                            </div>
+                                            <div className='d-flex align-items-center gap-3'>
+                                                <span className={`badge ${formData.status ? 'bg-success' : 'bg-secondary'} px-3 py-2`}>
+                                                    {formData.status ? 'Active' : 'Inactive'}
+                                                </span>
+                                                <div className='form-check form-switch form-switch-lg m-0'>
+                                                    <input
+                                                        className='form-check-input'
+                                                        type='checkbox'
+                                                        role='switch'
+                                                        id='status'
+                                                        checked={formData.status}
+                                                        onChange={(e) => setFormData({ ...formData, status: e.target.checked })}
+                                                        style={{ width: '48px', height: '24px', cursor: 'pointer' }}
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div className='d-flex justify-content-end gap-3'>
+                    <div className='d-flex justify-content-end gap-3 mt-3'>
                         <button
                             type='button'
                             onClick={() => navigate('/products-list')}
-                            className='btn btn-secondary-600'
+                            className='btn btn-secondary-600 '
                         >
                             Cancel
                         </button>

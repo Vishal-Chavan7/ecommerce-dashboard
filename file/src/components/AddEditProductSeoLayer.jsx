@@ -350,19 +350,19 @@ const AddEditProductSeoLayer = () => {
                             </div>
 
                             {/* Action Buttons */}
-                            <div className="d-flex align-items-center justify-content-center gap-3 mt-24">
+                            <div className="d-flex align-items-center justify-content-end gap-3 mt-4">
                                 <button
                                     type="button"
-                                    className="btn btn-outline-danger-600 border border-danger-600 text-md px-40 py-11 radius-8"
+                                    className="btn btn-outline-danger text-danger-600 border-danger-600 d-flex align-items-center px-4 py-2"
                                     onClick={() => navigate('/product-seo-list')}
                                     disabled={loading}
                                 >
-                                    <Icon icon="mdi:cancel" className="me-2" />
+                                    <Icon icon="mdi:cancel" className="me-2" style={{ fontSize: '18px' }} />
                                     Cancel
                                 </button>
                                 <button
                                     type="submit"
-                                    className="btn btn-primary-600 text-md px-40 py-11 radius-8"
+                                    className="btn btn-primary-600 d-flex align-items-center px-4 py-2"
                                     disabled={loading}
                                 >
                                     {loading ? (
@@ -372,7 +372,7 @@ const AddEditProductSeoLayer = () => {
                                         </>
                                     ) : (
                                         <>
-                                            <Icon icon="material-symbols:save" className="me-2" />
+                                            <Icon icon="material-symbols:save" className="me-2" style={{ fontSize: '18px' }} />
                                             {isEditMode ? 'Update SEO' : 'Create SEO'}
                                         </>
                                     )}

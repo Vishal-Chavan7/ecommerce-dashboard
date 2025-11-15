@@ -25,6 +25,12 @@ const AddEditCategoryLayer = () => {
         metaDescription: "",
     });
 
+    // State for file upload
+    const [iconFile, setIconFile] = useState(null);
+    const [imageFile, setImageFile] = useState(null);
+    const [iconPreview, setIconPreview] = useState("");
+    const [imagePreview, setImagePreview] = useState("");
+
     useEffect(() => {
         fetchCategories();
         if (isEditMode) {
@@ -69,19 +75,23 @@ const AddEditCategoryLayer = () => {
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
+
+        // Special handling for slug field - only lowercase letters and numbers
+        if (name === "slug") {
+            const sanitizedSlug = value
+                .toLowerCase()
+                .replace(/[^a-z0-9]/g, ""); // Remove any character that's not a-z or 0-9
+            setFormData((prev) => ({
+                ...prev,
+                slug: sanitizedSlug,
+            }));
+            return;
+        }
+
         setFormData((prev) => ({
             ...prev,
             [name]: type === "checkbox" ? checked : value,
         }));
-
-        // Auto-generate slug from name
-        if (name === "name" && !isEditMode) {
-            const slug = value
-                .toLowerCase()
-                .replace(/[^a-z0-9]+/g, "-")
-                .replace(/(^-|-$)/g, "");
-            setFormData((prev) => ({ ...prev, slug }));
-        }
 
         // Update level based on parent selection
         if (name === "parentId") {
@@ -91,6 +101,37 @@ const AddEditCategoryLayer = () => {
                 ...prev,
                 level: newLevel,
             }));
+        }
+    };
+
+    // Handle file selection
+    const handleFileChange = (e, type) => {
+        const file = e.target.files[0];
+        if (file) {
+            // Validate file type
+            if (!file.type.startsWith("image/")) {
+                toast.error("Please select an image file");
+                return;
+            }
+
+            // Validate file size (5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                toast.error("File size should be less than 5MB");
+                return;
+            }
+
+            // Create preview
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                if (type === "icon") {
+                    setIconFile(file);
+                    setIconPreview(reader.result);
+                } else {
+                    setImageFile(file);
+                    setImagePreview(reader.result);
+                }
+            };
+            reader.readAsDataURL(file);
         }
     };
 
@@ -104,16 +145,42 @@ const AddEditCategoryLayer = () => {
 
         try {
             setLoading(true);
-            const submitData = {
-                ...formData,
-                parentId: formData.parentId || null,
-            };
+
+            // Prepare FormData for file upload
+            const submitData = new FormData();
+            submitData.append("name", formData.name);
+            submitData.append("slug", formData.slug);
+            submitData.append("parentId", formData.parentId || "");
+            submitData.append("level", formData.level);
+            submitData.append("status", formData.status);
+            submitData.append("sortOrder", formData.sortOrder);
+            submitData.append("isFeatured", formData.isFeatured);
+            submitData.append("metaTitle", formData.metaTitle);
+            submitData.append("metaDescription", formData.metaDescription);
+
+            // Handle icon file upload
+            if (iconFile) {
+                submitData.append("icon", iconFile);
+            }
+
+            // Handle image file upload
+            if (imageFile) {
+                submitData.append("image", imageFile);
+            }
 
             if (isEditMode) {
-                await api.put(`/admin/categories/${id}`, submitData);
+                await api.put(`/admin/categories/${id}`, submitData, {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                });
                 toast.success("Category updated successfully");
             } else {
-                await api.post("/admin/categories", submitData);
+                await api.post("/admin/categories", submitData, {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                });
                 toast.success("Category created successfully");
             }
             navigate("/categories-list");
@@ -211,12 +278,17 @@ const AddEditCategoryLayer = () => {
                             <input
                                 type='text'
                                 className='form-control radius-8'
-                                placeholder='category-slug'
+                                placeholder='categoryslug'
                                 name='slug'
                                 value={formData.slug}
                                 onChange={handleChange}
+                                pattern="[a-z0-9]+"
+                                title="Only lowercase letters and numbers are allowed"
                                 required
                             />
+                            <small className='text-secondary-light d-block mt-1'>
+                                Only lowercase letters and numbers (e.g., electronicsgadgets)
+                            </small>
                         </div>
 
                         <div className='col-md-6'>
@@ -238,34 +310,6 @@ const AddEditCategoryLayer = () => {
                             </select>
                         </div>
 
-                        <div className='col-md-6'>
-                            <label className='form-label fw-semibold text-primary-light text-sm mb-8'>
-                                Level (Auto-calculated)
-                            </label>
-                            <input
-                                type='number'
-                                className='form-control radius-8 bg-neutral-50'
-                                name='level'
-                                value={formData.level}
-                                readOnly
-                                disabled
-                            />
-                        </div>
-
-                        <div className='col-md-6'>
-                            <label className='form-label fw-semibold text-primary-light text-sm mb-8'>
-                                Sort Order
-                            </label>
-                            <input
-                                type='number'
-                                className='form-control radius-8'
-                                placeholder='0'
-                                name='sortOrder'
-                                value={formData.sortOrder}
-                                onChange={handleChange}
-                            />
-                        </div>
-
                         {/* Media */}
                         <div className='col-12 mt-4'>
                             <h6 className='text-md fw-semibold mb-3 border-bottom pb-2'>
@@ -273,97 +317,111 @@ const AddEditCategoryLayer = () => {
                             </h6>
                         </div>
 
+                        {/* Icon Upload */}
                         <div className='col-md-6'>
                             <label className='form-label fw-semibold text-primary-light text-sm mb-8'>
-                                Icon URL
+                                Category Icon
                             </label>
-                            <input
-                                type='url'
-                                className='form-control radius-8'
-                                placeholder='https://cdn.com/icons/category-icon.png'
-                                name='icon'
-                                value={formData.icon}
-                                onChange={handleChange}
-                            />
-                            {formData.icon && (
-                                <img
-                                    src={formData.icon}
-                                    alt='Icon preview'
-                                    className='mt-2 w-32-px h-32-px rounded-circle'
-                                    onError={(e) => {
-                                        e.target.style.display = "none";
-                                    }}
+
+                            <div className='upload-image-wrapper position-relative'>
+                                <input
+                                    type='file'
+                                    className='form-control radius-8'
+                                    accept='image/*'
+                                    onChange={(e) => handleFileChange(e, "icon")}
                                 />
+                            </div>
+                            {iconPreview && (
+                                <div className='mt-3 text-center'>
+                                    <img
+                                        src={iconPreview}
+                                        alt='Icon preview'
+                                        className='w-64-px h-64-px rounded-circle object-fit-cover border'
+                                    />
+                                    <p className='text-sm text-secondary-light mt-2'>Icon Preview</p>
+                                </div>
                             )}
+                            <small className='text-secondary-light d-block mt-2'>
+                                Supported: JPG, PNG, GIF, WEBP, SVG, AVIF (Max 5MB)
+                            </small>
                         </div>
 
+                        {/* Banner Image Upload */}
                         <div className='col-md-6'>
                             <label className='form-label fw-semibold text-primary-light text-sm mb-8'>
-                                Banner Image URL
+                                Banner Image
                             </label>
-                            <input
-                                type='url'
-                                className='form-control radius-8'
-                                placeholder='https://cdn.com/banners/category.jpg'
-                                name='image'
-                                value={formData.image}
-                                onChange={handleChange}
-                            />
-                            {formData.image && (
-                                <img
-                                    src={formData.image}
-                                    alt='Image preview'
-                                    className='mt-2 w-100 rounded-8'
-                                    style={{ maxHeight: "200px", objectFit: "cover" }}
-                                    onError={(e) => {
-                                        e.target.style.display = "none";
-                                    }}
+
+                            <div className='upload-image-wrapper position-relative'>
+                                <input
+                                    type='file'
+                                    className='form-control radius-8'
+                                    accept='image/*'
+                                    onChange={(e) => handleFileChange(e, "image")}
                                 />
+                            </div>
+                            {imagePreview && (
+                                <div className='mt-3'>
+                                    <img
+                                        src={imagePreview}
+                                        alt='Banner preview'
+                                        className='w-100 rounded-8'
+                                        style={{ maxHeight: "200px", objectFit: "cover" }}
+                                    />
+                                    <p className='text-sm text-secondary-light mt-2'>Banner Preview</p>
+                                </div>
                             )}
+                            <small className='text-secondary-light d-block mt-2'>
+                                Supported: JPG, PNG, GIF, WEBP, SVG, AVIF (Max 5MB)
+                            </small>
                         </div>
 
                         {/* Settings */}
                         <div className='col-12 mt-4'>
-                            <h6 className='text-md fw-semibold mb-3 border-bottom pb-2'>
+                            <h6 className='text-md fw-semibold mb-3 mt-10 border-bottom pb-2'>
                                 Settings
                             </h6>
                         </div>
 
-                        <div className='col-md-4'>
-                            <div className='form-check form-switch'>
-                                <input
-                                    className='form-check-input'
-                                    type='checkbox'
-                                    id='statusSwitch'
-                                    name='status'
-                                    checked={formData.status}
-                                    onChange={handleChange}
-                                />
-                                <label className='form-check-label' htmlFor='statusSwitch'>
-                                    Active Status
-                                </label>
-                            </div>
-                        </div>
-
-                        <div className='col-md-4'>
-                            <div className='form-check form-switch'>
-                                <input
-                                    className='form-check-input'
-                                    type='checkbox'
-                                    id='featuredSwitch'
-                                    name='isFeatured'
-                                    checked={formData.isFeatured}
-                                    onChange={handleChange}
-                                />
-                                <label className='form-check-label' htmlFor='featuredSwitch'>
-                                    Featured on Home
-                                </label>
+                        <div className='col-12'>
+                            <div className='card border shadow-none radius-8 bg-neutral-50'>
+                                <div className='card-body p-20'>
+                                    <div className='d-flex align-items-center justify-content-between gap-4'>
+                                        <div className='flex-grow-1 pe-3'>
+                                            <label className='form-label fw-semibold text-neutral-900 mb-2 d-block'>
+                                                Category Status
+                                            </label>
+                                            <p className='text-sm text-secondary-light mb-0 line-height-1-6'>
+                                                {formData.status
+                                                    ? 'This category is active and visible to customers'
+                                                    : 'This category is inactive and hidden from customers'}
+                                            </p>
+                                        </div>
+                                        <div className='d-flex align-items-center gap-3 flex-shrink-0'>
+                                            <span className={`badge ${formData.status ? 'bg-success-600' : 'bg-neutral-400'} px-20 py-8 radius-4 fw-medium text-sm`}>
+                                                {formData.status ? 'Active' : 'Inactive'}
+                                            </span>
+                                            <div className='form-check form-switch form-switch-lg m-0'>
+                                                <input
+                                                    className='form-check-input cursor-pointer shadow-none'
+                                                    type='checkbox'
+                                                    role='switch'
+                                                    id='statusSwitch'
+                                                    name='status'
+                                                    checked={formData.status}
+                                                    onChange={handleChange}
+                                                    style={{ width: '52px', height: '28px' }}
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
                         {/* SEO */}
                         <div className='col-12 mt-4'>
-                            <h6 className='text-md fw-semibold mb-3 border-bottom pb-2'>
+                            <h6 className='text-md fw-semibold mb-3 mt-10 border-bottom pb-2'>
                                 SEO Information
                             </h6>
                         </div>
@@ -397,7 +455,7 @@ const AddEditCategoryLayer = () => {
                         </div>
 
                         {/* Action Buttons */}
-                        <div className='col-12 mt-4'>
+                        <div className='col-12 mt-20'>
                             <div className='d-flex align-items-center gap-3'>
                                 <button
                                     type='submit'

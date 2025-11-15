@@ -16,9 +16,10 @@ const AddEditBrandLayer = () => {
         logo: '',
         description: '',
         website: '',
-        status: true,
-        isFeatured: false
+        status: true
     });
+    const [logoFile, setLogoFile] = useState(null);
+    const [logoPreview, setLogoPreview] = useState('');
 
     useEffect(() => {
         if (isEditMode) {
@@ -37,9 +38,11 @@ const AddEditBrandLayer = () => {
                 logo: brand.logo || '',
                 description: brand.description || '',
                 website: brand.website || '',
-                status: brand.status,
-                isFeatured: brand.isFeatured
+                status: brand.status
             });
+            if (brand.logo) {
+                setLogoPreview(brand.logo);
+            }
         } catch (error) {
             console.error('Error fetching brand:', error);
             toast.error('Failed to load brand');
@@ -49,13 +52,51 @@ const AddEditBrandLayer = () => {
         }
     };
 
-    const handleNameChange = (e) => {
-        const name = e.target.value;
-        setFormData({
-            ...formData,
-            name,
-            slug: name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
-        });
+    const handleChange = (e) => {
+        const { name, value, type, checked } = e.target;
+
+        // Special handling for slug field - only lowercase letters and numbers
+        if (name === "slug") {
+            const sanitizedSlug = value
+                .toLowerCase()
+                .replace(/[^a-z0-9]/g, ""); // Remove any character that's not a-z or 0-9
+            setFormData((prev) => ({
+                ...prev,
+                slug: sanitizedSlug,
+            }));
+            return;
+        }
+
+        setFormData((prev) => ({
+            ...prev,
+            [name]: type === "checkbox" ? checked : value,
+        }));
+    };
+
+    // Handle file selection
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            // Validate file type
+            if (!file.type.startsWith('image/')) {
+                toast.error('Please select an image file');
+                return;
+            }
+
+            // Validate file size (5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                toast.error('File size should be less than 5MB');
+                return;
+            }
+
+            // Create preview
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setLogoFile(file);
+                setLogoPreview(reader.result);
+            };
+            reader.readAsDataURL(file);
+        }
     };
 
     const handleSubmit = async (e) => {
@@ -71,15 +112,35 @@ const AddEditBrandLayer = () => {
             return;
         }
 
-        const payload = { ...formData };
-
         try {
             setLoading(true);
+
+            // Create FormData for multipart upload
+            const submitData = new FormData();
+            submitData.append('name', formData.name);
+            submitData.append('slug', formData.slug);
+            submitData.append('description', formData.description);
+            submitData.append('website', formData.website);
+            submitData.append('status', formData.status);
+
+            // Handle logo file upload
+            if (logoFile) {
+                submitData.append('logo', logoFile);
+            }
+
             if (isEditMode) {
-                await api.put(`/admin/brands/${id}`, payload);
+                await api.put(`/admin/brands/${id}`, submitData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                });
                 toast.success('Brand updated successfully');
             } else {
-                await api.post('/admin/brands', payload);
+                await api.post('/admin/brands', submitData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                });
                 toast.success('Brand created successfully');
             }
             navigate('/brands-list');
@@ -122,8 +183,9 @@ const AddEditBrandLayer = () => {
                                 <input
                                     type='text'
                                     className='form-control'
+                                    name='name'
                                     value={formData.name}
-                                    onChange={handleNameChange}
+                                    onChange={handleChange}
                                     placeholder='e.g., Nike, Apple, Samsung'
                                     required
                                 />
@@ -136,28 +198,45 @@ const AddEditBrandLayer = () => {
                                 <input
                                     type='text'
                                     className='form-control'
+                                    name='slug'
                                     value={formData.slug}
-                                    onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
-                                    placeholder='e.g., nike, apple, samsung'
+                                    onChange={handleChange}
+                                    pattern="[a-z0-9]+"
+                                    title="Only lowercase letters and numbers are allowed"
+                                    placeholder='e.g., nikerunning'
                                     required
                                 />
                                 <div className='form-text'>
-                                    URL-friendly version of the name (auto-generated)
+                                    Only lowercase letters and numbers (e.g., samsunggalaxy)
                                 </div>
                             </div>
 
+                            {/* Logo Upload Section */}
                             <div className='col-md-6'>
-                                <label className='form-label'>Logo URL</label>
-                                <input
-                                    type='url'
-                                    className='form-control'
-                                    value={formData.logo}
-                                    onChange={(e) => setFormData({ ...formData, logo: e.target.value })}
-                                    placeholder='https://cdn.com/brands/logo.png'
-                                />
-                                <div className='form-text'>
-                                    Enter a valid image URL for the brand logo
+                                <label className='form-label'>Brand Logo</label>
+
+                                <div className='mb-3'>
+                                    <input
+                                        type='file'
+                                        className='form-control'
+                                        accept='image/*'
+                                        onChange={handleFileChange}
+                                    />
                                 </div>
+                                {logoPreview && (
+                                    <div className='mt-3 text-center'>
+                                        <img
+                                            src={logoPreview}
+                                            alt='Logo preview'
+                                            className='rounded border'
+                                            style={{ maxWidth: '200px', maxHeight: '200px', objectFit: 'contain' }}
+                                        />
+                                        <p className='text-sm text-secondary-light mt-2'>Logo Preview</p>
+                                    </div>
+                                )}
+                                <small className='text-secondary-light d-block mt-2'>
+                                    Supported: JPG, PNG, GIF, WEBP, SVG, AVIF (Max 5MB)
+                                </small>
                             </div>
 
                             <div className='col-md-6'>
@@ -184,47 +263,48 @@ const AddEditBrandLayer = () => {
                                     placeholder='Brief description about the brand...'
                                 ></textarea>
                             </div>
+                        </div>
+                    </div>
 
+                    {/* Status Section */}
+                    <div className='mb-4'>
+                        <h6 className='mb-3 mt-2'>Settings</h6>
+                        <div className='row g-3'>
                             <div className='col-md-6'>
-                                <label className='form-label d-block'>Brand Options</label>
-                                <div className='d-flex gap-4'>
-                                    <div className='form-check form-switch'>
-                                        <input
-                                            className='form-check-input'
-                                            type='checkbox'
-                                            role='switch'
-                                            id='status'
-                                            checked={formData.status}
-                                            onChange={(e) => setFormData({ ...formData, status: e.target.checked })}
-                                        />
-                                        <label className='form-check-label' htmlFor='status'>
-                                            Active Status
-                                        </label>
+                                <div className='card shadow-sm border-0 bg-neutral-50 p-20 radius-8'>
+                                    <div className='d-flex align-items-center justify-content-between gap-4'>
+                                        <div className='flex-grow-1'>
+                                            <div className='d-flex align-items-center gap-2 mb-2'>
+                                                <h6 className='text-md mb-0'>Brand Status</h6>
+                                                <span className={`badge text-sm px-2 py-1 ${formData.status ? 'bg-success-600' : 'bg-secondary-600'}`}>
+                                                    {formData.status ? 'Active' : 'Inactive'}
+                                                </span>
+                                            </div>
+                                            <p className='text-secondary-light text-sm mb-0'>
+                                                {formData.status
+                                                    ? 'This brand is active and visible to customers'
+                                                    : 'This brand is inactive and hidden from the store'}
+                                            </p>
+                                        </div>
+                                        <div className='form-check form-switch pe-3'>
+                                            <input
+                                                className='form-check-input'
+                                                type='checkbox'
+                                                role='switch'
+                                                id='status'
+                                                checked={formData.status}
+                                                onChange={(e) => setFormData({ ...formData, status: e.target.checked })}
+                                                style={{ width: '52px', height: '28px', cursor: 'pointer' }}
+                                            />
+                                        </div>
                                     </div>
-
-                                    <div className='form-check form-switch'>
-                                        <input
-                                            className='form-check-input'
-                                            type='checkbox'
-                                            role='switch'
-                                            id='isFeatured'
-                                            checked={formData.isFeatured}
-                                            onChange={(e) => setFormData({ ...formData, isFeatured: e.target.checked })}
-                                        />
-                                        <label className='form-check-label' htmlFor='isFeatured'>
-                                            Featured Brand
-                                        </label>
-                                    </div>
-                                </div>
-                                <div className='form-text mt-2'>
-                                    Featured brands appear in special sections
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    {/* Logo Preview */}
-                    {formData.logo && (
+                    {/* Logo Preview - Remove this old section since we have inline preview now */}
+                    {false && formData.logo && (
                         <div className='mb-4'>
                             <h6 className='mb-3'>Logo Preview</h6>
                             <div className='border rounded p-3 bg-neutral-50 text-center'>

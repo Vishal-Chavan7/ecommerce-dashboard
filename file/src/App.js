@@ -120,6 +120,13 @@ import EditProductPricingPage from "./pages/EditProductPricingPage";
 import TierPricingListPage from "./pages/TierPricingListPage";
 import AddTierPricingPage from "./pages/AddTierPricingPage";
 import EditTierPricingPage from "./pages/EditTierPricingPage";
+import PaymentMethodsListPage from "./pages/PaymentMethodsListPage";
+import AddPaymentMethodPage from "./pages/AddPaymentMethodPage";
+import EditPaymentMethodPage from "./pages/EditPaymentMethodPage";
+import PaymentTransactionsListPage from "./pages/PaymentTransactionsListPage";
+import ViewPaymentTransactionPage from "./pages/ViewPaymentTransactionPage";
+import AddPaymentTransactionPage from "./pages/AddPaymentTransactionPage";
+import EditPaymentTransactionPage from "./pages/EditPaymentTransactionPage";
 import SpecialPricingListPage from "./pages/SpecialPricingListPage";
 import AddSpecialPricingPage from "./pages/AddSpecialPricingPage";
 import EditSpecialPricingPage from "./pages/EditSpecialPricingPage";
@@ -156,6 +163,22 @@ import ComingSoonPage from "./pages/ComingSoonPage";
 import AccessDeniedPage from "./pages/AccessDeniedPage";
 import MaintenancePage from "./pages/MaintenancePage";
 import BlankPagePage from "./pages/BlankPagePage";
+import OrderHistoryListPage from "./pages/OrderHistoryListPage";
+import AddOrderHistoryPage from "./pages/AddOrderHistoryPage";
+import EditOrderHistoryPage from "./pages/EditOrderHistoryPage";
+import ViewOrderHistoryPage from "./pages/ViewOrderHistoryPage";
+import OrderReturnListPage from "./pages/OrderReturnListPage";
+import AddOrderReturnPage from "./pages/AddOrderReturnPage";
+import EditOrderReturnPage from "./pages/EditOrderReturnPage";
+import ViewOrderReturnPage from "./pages/ViewOrderReturnPage";
+import OrderReplacementListPage from "./pages/OrderReplacementListPage";
+import AddOrderReplacementPage from "./pages/AddOrderReplacementPage";
+import EditOrderReplacementPage from "./pages/EditOrderReplacementPage";
+import ViewOrderReplacementPage from "./pages/ViewOrderReplacementPage";
+import ListReturnPage from "./pages/ListReturnPage";
+import AddReturnPage from "./pages/AddReturnPage";
+import EditReturnPage from "./pages/EditReturnPage";
+import ViewReturnPage from "./pages/ViewReturnPage";
 
 function App() {
   return (
@@ -368,6 +391,109 @@ function App() {
           path="/edit-tier-pricing/:id"
           element={<EditTierPricingPage />}
         />
+
+        {/* Payment Methods Routes */}
+        <Route
+          exact
+          path="/payment-methods"
+          element={<PaymentMethodsListPage />}
+        />
+        <Route
+          exact
+          path="/add-payment-method"
+          element={<AddPaymentMethodPage />}
+        />
+        <Route
+          exact
+          path="/edit-payment-method/:id"
+          element={<EditPaymentMethodPage />}
+        />
+
+        {/* Payment Transactions Routes */}
+        <Route
+          exact
+          path="/payment-transactions"
+          element={<PaymentTransactionsListPage />}
+        />
+        <Route
+          exact
+          path="/add-payment-transaction"
+          element={<AddPaymentTransactionPage />}
+        />
+        <Route
+          exact
+          path="/edit-payment-transaction/:id"
+          element={<EditPaymentTransactionPage />}
+        />
+        <Route
+          exact
+          path="/view-payment-transaction/:id"
+          element={<ViewPaymentTransactionPage />}
+        />
+
+        {/* Order History Routes */}
+        <Route exact path="/order-history" element={<OrderHistoryListPage />} />
+        <Route
+          exact
+          path="/add-order-history"
+          element={<AddOrderHistoryPage />}
+        />
+        <Route
+          exact
+          path="/edit-order-history/:id"
+          element={<EditOrderHistoryPage />}
+        />
+        <Route
+          exact
+          path="/view-order-history/:id"
+          element={<ViewOrderHistoryPage />}
+        />
+
+        {/* Order Return Routes */}
+        <Route exact path="/order-returns" element={<OrderReturnListPage />} />
+        <Route
+          exact
+          path="/add-order-return"
+          element={<AddOrderReturnPage />}
+        />
+        <Route
+          exact
+          path="/edit-order-return/:id"
+          element={<EditOrderReturnPage />}
+        />
+        <Route
+          exact
+          path="/view-order-return/:id"
+          element={<ViewOrderReturnPage />}
+        />
+
+        {/* Order Replacement Routes */}
+        <Route
+          exact
+          path="/order-replacements"
+          element={<OrderReplacementListPage />}
+        />
+        <Route
+          exact
+          path="/add-order-replacement"
+          element={<AddOrderReplacementPage />}
+        />
+        <Route
+          exact
+          path="/edit-order-replacement/:id"
+          element={<EditOrderReplacementPage />}
+        />
+        <Route
+          exact
+          path="/view-order-replacement/:id"
+          element={<ViewOrderReplacementPage />}
+        />
+
+        {/* Returns & Refunds Routes */}
+        <Route exact path="/returns" element={<ListReturnPage />} />
+        <Route exact path="/add-return" element={<AddReturnPage />} />
+        <Route exact path="/edit-return/:id" element={<EditReturnPage />} />
+        <Route exact path="/view-return/:id" element={<ViewReturnPage />} />
 
         {/* Special Pricing Routes */}
         <Route

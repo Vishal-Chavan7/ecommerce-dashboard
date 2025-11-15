@@ -92,7 +92,8 @@ const ProductFaqsListLayer = () => {
                     </div>
                     <div className="d-flex flex-wrap align-items-center gap-3">
                         <select
-                            className="form-select form-select-sm w-auto"
+                            className="form-select form-select-sm p-1"
+                            style={{ minWidth: '150px', width: 'auto' }}
                             value={selectedProduct}
                             onChange={(e) => setSelectedProduct(e.target.value)}
                         >
@@ -106,7 +107,8 @@ const ProductFaqsListLayer = () => {
                         <div className="icon-field">
                             <input
                                 type="text"
-                                className="form-control form-control-sm w-auto"
+                                className="form-control form-control-sm"
+                                style={{ minWidth: '200px', width: 'auto' }}
                                 placeholder="Search FAQs..."
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}

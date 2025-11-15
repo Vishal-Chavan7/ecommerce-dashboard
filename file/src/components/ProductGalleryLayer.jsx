@@ -16,8 +16,8 @@ const ProductGalleryLayer = () => {
   const [editingIndex, setEditingIndex] = useState(null);
   const [deleteIndex, setDeleteIndex] = useState(null);
 
-  const [newImage, setNewImage] = useState({ url: '', alt: '' });
-  const [editImage, setEditImage] = useState({ url: '', alt: '' });
+  const [newImage, setNewImage] = useState({ file: null, alt: '', preview: '' });
+  const [editImage, setEditImage] = useState({ file: null, alt: '', preview: '', existingUrl: '' });
 
   useEffect(() => {
     fetchProducts();
@@ -52,19 +52,58 @@ const ProductGalleryLayer = () => {
     }
   };
 
+  const handleFileChange = (e, isEdit = false) => {
+    const file = e.target.files[0];
+
+    if (!file) return;
+
+    // Validate file type
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml', 'image/avif'];
+    if (!allowedTypes.includes(file.type)) {
+      toast.error('Please upload a valid image file (JPEG, PNG, GIF, WEBP, SVG, AVIF)');
+      return;
+    }
+
+    // Validate file size (5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error('File size must be less than 5MB');
+      return;
+    }
+
+    // Create preview
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      if (isEdit) {
+        setEditImage(prev => ({ ...prev, file, preview: reader.result }));
+      } else {
+        setNewImage(prev => ({ ...prev, file, preview: reader.result }));
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
   const handleAddImage = async (e) => {
     e.preventDefault();
-    
-    if (!newImage.url.trim()) {
-      toast.error('Image URL is required');
+
+    if (!newImage.file) {
+      toast.error('Please select an image file');
       return;
     }
 
     try {
-      await api.post(`/admin/gallery/product/${selectedProduct}`, newImage);
+      const formData = new FormData();
+      formData.append('image', newImage.file);
+      formData.append('alt', newImage.alt);
+
+      await api.post(`/admin/gallery/product/${selectedProduct}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
       toast.success('Image added successfully');
       setShowAddModal(false);
-      setNewImage({ url: '', alt: '' });
+      setNewImage({ file: null, alt: '', preview: '' });
       fetchGallery();
     } catch (error) {
       console.error('Error adding image:', error);
@@ -74,21 +113,34 @@ const ProductGalleryLayer = () => {
 
   const handleEditImage = async (e) => {
     e.preventDefault();
-    
-    if (!editImage.url.trim()) {
-      toast.error('Image URL is required');
+
+    // If no new file and no existing URL, show error
+    if (!editImage.file && !editImage.existingUrl) {
+      toast.error('Please select an image file');
       return;
     }
 
     try {
+      const formData = new FormData();
+      if (editImage.file) {
+        formData.append('image', editImage.file);
+      }
+      formData.append('alt', editImage.alt);
+
       await api.put(
         `/admin/gallery/product/${selectedProduct}/image/${editingIndex}`,
-        editImage
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
       );
+
       toast.success('Image updated successfully');
       setShowEditModal(false);
       setEditingIndex(null);
-      setEditImage({ url: '', alt: '' });
+      setEditImage({ file: null, alt: '', preview: '', existingUrl: '' });
       fetchGallery();
     } catch (error) {
       console.error('Error updating image:', error);
@@ -114,8 +166,10 @@ const ProductGalleryLayer = () => {
   const openEditModal = (index) => {
     setEditingIndex(index);
     setEditImage({
-      url: gallery.images[index].url,
+      file: null,
       alt: gallery.images[index].alt || '',
+      preview: '',
+      existingUrl: gallery.images[index].url,
     });
     setShowEditModal(true);
   };
@@ -128,6 +182,19 @@ const ProductGalleryLayer = () => {
   const getProductName = (productId) => {
     const product = products.find(p => p._id === productId);
     return product ? product.title : 'Unknown Product';
+  };
+
+  // Helper function to get full image URL
+  const getImageUrl = (url) => {
+    if (!url) return '';
+    // If it's already a full URL (http/https), return as is
+    if (url.startsWith('http://') || url.startsWith('https://')) {
+      return url;
+    }
+    // If it's a relative path, prepend the API base URL
+    const baseURL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+    const serverURL = baseURL.replace('/api', ''); // Remove /api to get server root
+    return `${serverURL}${url}`;
   };
 
   return (
@@ -186,7 +253,7 @@ const ProductGalleryLayer = () => {
           <>
             <div className="mb-3">
               <p className="text-sm text-secondary-light">
-                <strong>Product:</strong> {getProductName(gallery.productId)} | 
+                <strong>Product:</strong> {getProductName(gallery.productId)} |
                 <strong className="ms-2">Total Images:</strong> {gallery.images.length}
               </p>
             </div>
@@ -196,7 +263,7 @@ const ProductGalleryLayer = () => {
                   <div className="card border">
                     <div className="position-relative" style={{ paddingTop: '100%' }}>
                       <img
-                        src={image.url}
+                        src={getImageUrl(image.url)}
                         alt={image.alt || `Image ${index + 1}`}
                         className="position-absolute top-0 start-0 w-100 h-100"
                         style={{ objectFit: 'cover' }}
@@ -246,7 +313,7 @@ const ProductGalleryLayer = () => {
                   className="btn-close"
                   onClick={() => {
                     setShowAddModal(false);
-                    setNewImage({ url: '', alt: '' });
+                    setNewImage({ file: null, alt: '', preview: '' });
                   }}
                 />
               </div>
@@ -254,16 +321,16 @@ const ProductGalleryLayer = () => {
                 <div className="modal-body">
                   <div className="mb-3">
                     <label className="form-label">
-                      Image URL <span className="text-danger">*</span>
+                      Image File <span className="text-danger">*</span>
                     </label>
                     <input
-                      type="url"
+                      type="file"
                       className="form-control"
-                      value={newImage.url}
-                      onChange={(e) => setNewImage({ ...newImage, url: e.target.value })}
-                      placeholder="https://example.com/image.jpg"
+                      accept="image/jpeg,image/jpg,image/png,image/gif,image/webp,image/svg+xml,image/avif"
+                      onChange={(e) => handleFileChange(e, false)}
                       required
                     />
+                    <small className="text-muted">Allowed: JPEG, PNG, GIF, WEBP, SVG, AVIF (Max: 5MB)</small>
                   </div>
                   <div className="mb-3">
                     <label className="form-label">Alt Text (SEO)</label>
@@ -276,18 +343,15 @@ const ProductGalleryLayer = () => {
                     />
                     <small className="text-muted">SEO-friendly description for the image</small>
                   </div>
-                  {newImage.url && (
+                  {newImage.preview && (
                     <div className="mb-3">
                       <label className="form-label">Preview</label>
                       <div className="border rounded p-2">
                         <img
-                          src={newImage.url}
+                          src={newImage.preview}
                           alt="Preview"
                           className="w-100"
                           style={{ maxHeight: '200px', objectFit: 'contain' }}
-                          onError={(e) => {
-                            e.target.src = 'https://via.placeholder.com/300?text=Invalid+URL';
-                          }}
                         />
                       </div>
                     </div>
@@ -299,7 +363,7 @@ const ProductGalleryLayer = () => {
                     className="btn btn-secondary-600"
                     onClick={() => {
                       setShowAddModal(false);
-                      setNewImage({ url: '', alt: '' });
+                      setNewImage({ file: null, alt: '', preview: '' });
                     }}
                   >
                     Cancel
@@ -327,24 +391,34 @@ const ProductGalleryLayer = () => {
                   onClick={() => {
                     setShowEditModal(false);
                     setEditingIndex(null);
-                    setEditImage({ url: '', alt: '' });
+                    setEditImage({ file: null, alt: '', preview: '', existingUrl: '' });
                   }}
                 />
               </div>
               <form onSubmit={handleEditImage}>
                 <div className="modal-body">
                   <div className="mb-3">
+                    <label className="form-label">Current Image</label>
+                    <div className="border rounded p-2 mb-2">
+                      <img
+                        src={getImageUrl(editImage.existingUrl)}
+                        alt="Current"
+                        className="w-100"
+                        style={{ maxHeight: '150px', objectFit: 'contain' }}
+                      />
+                    </div>
+                  </div>
+                  <div className="mb-3">
                     <label className="form-label">
-                      Image URL <span className="text-danger">*</span>
+                      Replace Image (Optional)
                     </label>
                     <input
-                      type="url"
+                      type="file"
                       className="form-control"
-                      value={editImage.url}
-                      onChange={(e) => setEditImage({ ...editImage, url: e.target.value })}
-                      placeholder="https://example.com/image.jpg"
-                      required
+                      accept="image/jpeg,image/jpg,image/png,image/gif,image/webp,image/svg+xml,image/avif"
+                      onChange={(e) => handleFileChange(e, true)}
                     />
+                    <small className="text-muted">Leave empty to keep current image. Allowed: JPEG, PNG, GIF, WEBP, SVG, AVIF (Max: 5MB)</small>
                   </div>
                   <div className="mb-3">
                     <label className="form-label">Alt Text (SEO)</label>
@@ -357,18 +431,15 @@ const ProductGalleryLayer = () => {
                     />
                     <small className="text-muted">SEO-friendly description for the image</small>
                   </div>
-                  {editImage.url && (
+                  {editImage.preview && (
                     <div className="mb-3">
-                      <label className="form-label">Preview</label>
+                      <label className="form-label">New Image Preview</label>
                       <div className="border rounded p-2">
                         <img
-                          src={editImage.url}
+                          src={editImage.preview}
                           alt="Preview"
                           className="w-100"
                           style={{ maxHeight: '200px', objectFit: 'contain' }}
-                          onError={(e) => {
-                            e.target.src = 'https://via.placeholder.com/300?text=Invalid+URL';
-                          }}
                         />
                       </div>
                     </div>
@@ -381,7 +452,7 @@ const ProductGalleryLayer = () => {
                     onClick={() => {
                       setShowEditModal(false);
                       setEditingIndex(null);
-                      setEditImage({ url: '', alt: '' });
+                      setEditImage({ file: null, alt: '', preview: '', existingUrl: '' });
                     }}
                   >
                     Cancel

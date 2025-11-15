@@ -8,6 +8,8 @@ const CategoriesListLayer = () => {
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [deleteId, setDeleteId] = useState(null);
 
     useEffect(() => {
         fetchCategories();
@@ -27,13 +29,16 @@ const CategoriesListLayer = () => {
     };
 
     const handleDelete = async (id) => {
-        if (!window.confirm("Are you sure you want to delete this category?")) {
-            return;
-        }
+        setDeleteId(id);
+        setShowDeleteModal(true);
+    };
 
+    const handleDeleteConfirm = async () => {
         try {
-            await api.delete(`/admin/categories/${id}`);
+            await api.delete(`/admin/categories/${deleteId}`);
             toast.success("Category deleted successfully");
+            setShowDeleteModal(false);
+            setDeleteId(null);
             fetchCategories();
         } catch (error) {
             console.error("Error deleting category:", error);
@@ -148,9 +153,6 @@ const CategoriesListLayer = () => {
                                     </th>
                                     <th scope='col'>Category Name</th>
                                     <th scope='col'>Slug</th>
-                                    <th scope='col'>Level</th>
-                                    <th scope='col'>Sort Order</th>
-                                    <th scope='col'>Featured</th>
                                     <th scope='col'>Status</th>
                                     <th scope='col' className='text-center'>
                                         Action
@@ -160,7 +162,7 @@ const CategoriesListLayer = () => {
                             <tbody>
                                 {filteredCategories.length === 0 ? (
                                     <tr>
-                                        <td colSpan='8' className='text-center py-4'>
+                                        <td colSpan='5' className='text-center py-4'>
                                             No categories found
                                         </td>
                                     </tr>
@@ -207,29 +209,10 @@ const CategoriesListLayer = () => {
                                                 </span>
                                             </td>
                                             <td>
-                                                <span className='badge bg-neutral-200 text-dark px-12 py-4 radius-4'>
-                                                    Level {category.level}
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <span className='text-sm'>{category.sortOrder}</span>
-                                            </td>
-                                            <td>
-                                                {category.isFeatured ? (
-                                                    <span className='badge bg-success-focus text-success-600 px-12 py-4 radius-4 fw-medium text-sm'>
-                                                        Yes
-                                                    </span>
-                                                ) : (
-                                                    <span className='badge bg-neutral-200 text-secondary-light px-12 py-4 radius-4 fw-medium text-sm'>
-                                                        No
-                                                    </span>
-                                                )}
-                                            </td>
-                                            <td>
                                                 <button
                                                     className={`badge ${category.status
-                                                            ? "bg-success-focus text-success-600"
-                                                            : "bg-danger-focus text-danger-600"
+                                                        ? "bg-success-focus text-success-600"
+                                                        : "bg-danger-focus text-danger-600"
                                                         } px-12 py-4 radius-4 fw-medium text-sm border-0`}
                                                     onClick={() =>
                                                         handleStatusToggle(category._id, category.status)
@@ -297,6 +280,43 @@ const CategoriesListLayer = () => {
                     </li>
                 </ul>
             </div>
+
+            {/* Delete Confirmation Modal */}
+            {showDeleteModal && (
+                <div className="modal show d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+                    <div className="modal-dialog modal-dialog-centered">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title">Confirm Delete</h5>
+                                <button
+                                    type="button"
+                                    className="btn-close"
+                                    onClick={() => setShowDeleteModal(false)}
+                                ></button>
+                            </div>
+                            <div className="modal-body">
+                                <p>Are you sure you want to delete this category? This action cannot be undone.</p>
+                            </div>
+                            <div className="modal-footer">
+                                <button
+                                    type="button"
+                                    className="btn btn-secondary"
+                                    onClick={() => setShowDeleteModal(false)}
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type="button"
+                                    className="btn btn-danger"
+                                    onClick={handleDeleteConfirm}
+                                >
+                                    Delete
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

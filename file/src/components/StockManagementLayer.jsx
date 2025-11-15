@@ -220,7 +220,8 @@ const StockManagementLayer = () => {
         <div className="d-flex flex-wrap align-items-center justify-content-between gap-3">
           <div className="d-flex flex-wrap align-items-center gap-2">
             <select
-              className="form-select form-select-sm w-auto"
+              className="form-select form-select-sm p-1 "
+              style={{ minWidth: '150px', width: 'auto' }}
               value={selectedProduct}
               onChange={(e) => {
                 setSelectedProduct(e.target.value);
@@ -236,7 +237,8 @@ const StockManagementLayer = () => {
             </select>
             {selectedProduct && (
               <select
-                className="form-select form-select-sm w-auto"
+                className="form-select form-select-sm  p-1"
+                style={{ minWidth: '150px', width: 'auto' }}
                 value={selectedVariant}
                 onChange={(e) => setSelectedVariant(e.target.value)}
               >
@@ -249,7 +251,8 @@ const StockManagementLayer = () => {
               </select>
             )}
             <select
-              className="form-select form-select-sm w-auto"
+              className="form-select form-select-sm p-1"
+              style={{ minWidth: '120px', width: 'auto' }}
               value={filterType}
               onChange={(e) => setFilterType(e.target.value)}
             >
@@ -258,7 +261,8 @@ const StockManagementLayer = () => {
               <option value="out">Stock Out</option>
             </select>
             <select
-              className="form-select form-select-sm w-auto"
+              className="form-select form-select-sm p-1"
+              style={{ minWidth: '130px', width: 'auto' }}
               value={filterSource}
               onChange={(e) => setFilterSource(e.target.value)}
             >
