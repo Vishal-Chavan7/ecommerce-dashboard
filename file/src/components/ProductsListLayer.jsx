@@ -1,8 +1,16 @@
 ﻿import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { Icon } from '@iconify/react';
 import api from '../api/axios';
+
+const API_BASE_URL = process.env.REACT_APP_API_URL?.replace('/api', '') || 'http://localhost:5000';
+
+const getImageUrl = (path) => {
+    if (!path) return '';
+    if (path.startsWith('http')) return path;
+    return `${API_BASE_URL}${path}`;
+};
 
 const ProductsListLayer = () => {
     const navigate = useNavigate();
@@ -225,7 +233,7 @@ const ProductsListLayer = () => {
                                             </td>
                                             <td>
                                                 {product.thumbnail ? (
-                                                    <img src={product.thumbnail} alt={product.title} className='rounded' style={{ width: '50px', height: '50px', objectFit: 'cover' }} />
+                                                    <img src={getImageUrl(product.thumbnail)} alt={product.title} className='rounded' style={{ width: '50px', height: '50px', objectFit: 'cover' }} />
                                                 ) : (
                                                     <div className='bg-neutral-200 rounded d-flex align-items-center justify-content-center' style={{ width: '50px', height: '50px' }}>
                                                         <Icon icon='mdi:image-off' className='text-secondary-light' />
@@ -257,23 +265,13 @@ const ProductsListLayer = () => {
                                             </td>
                                             <td>
                                                 <div className='d-flex align-items-center gap-3'>
-                                                    <span className={`badge px-3 py-1 ${product.status ? 'bg-success-600 text-white' : 'bg-neutral-400 text-white'}`}>
-                                                        {product.status ? 'Active' : 'Inactive'}
-                                                    </span>
-                                                    <div className='form-check form-switch m-0'>
+                                                    <div className='form-switch switch-primary d-flex align-items-center gap-3'>
                                                         <input
-                                                            className='form-check-input cursor-pointer shadow-none'
+                                                            className='form-check-input'
                                                             type='checkbox'
                                                             role='switch'
                                                             checked={product.status}
                                                             onChange={() => handleToggleStatus(product._id, product.status)}
-                                                            style={{
-                                                                width: '48px',
-                                                                height: '24px',
-                                                                backgroundColor: product.status ? '#10b981' : '#d1d5db',
-                                                                borderColor: product.status ? '#10b981' : '#d1d5db',
-                                                                transition: 'all 0.3s ease'
-                                                            }}
                                                         />
                                                     </div>
                                                 </div>

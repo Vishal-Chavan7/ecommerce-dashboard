@@ -70,8 +70,8 @@ const AddEditProductSeoLayer = () => {
 
         if (!formData.slug.trim()) {
             newErrors.slug = 'Slug is required';
-        } else if (!/^[a-z0-9-]+$/.test(formData.slug)) {
-            newErrors.slug = 'Slug can only contain lowercase letters, numbers, and hyphens';
+        } else if (!/^[a-z]+$/.test(formData.slug)) {
+            newErrors.slug = 'Slug can only contain lowercase letters';
         }
 
         if (formData.metaTitle && formData.metaTitle.length > 60) {
@@ -111,19 +111,9 @@ const AddEditProductSeoLayer = () => {
     const handleChange = (e) => {
         const { name, value } = e.target;
 
-        let updates = { [name]: value };
-
-        // Auto-generate slug from product name if not in edit mode
-        if (name === 'productId' && value && !isEditMode) {
-            const product = products.find(p => p._id === value);
-            if (product && product.title) {
-                updates.slug = generateSlug(product.title);
-            }
-        }
-
         setFormData(prev => ({
             ...prev,
-            ...updates
+            [name]: value
         }));
 
         // Clear error for this field
@@ -131,6 +121,21 @@ const AddEditProductSeoLayer = () => {
             setErrors(prev => ({
                 ...prev,
                 [name]: ''
+            }));
+        }
+    };
+
+    const handleSlugChange = (e) => {
+        const slug = e.target.value.toLowerCase().replace(/[^a-z]/g, '');
+        setFormData(prev => ({
+            ...prev,
+            slug
+        }));
+        // Clear error for slug field
+        if (errors.slug) {
+            setErrors(prev => ({
+                ...prev,
+                slug: ''
             }));
         }
     };
@@ -246,12 +251,12 @@ const AddEditProductSeoLayer = () => {
                                     className={`form-control ${errors.slug ? 'is-invalid' : ''}`}
                                     name="slug"
                                     value={formData.slug}
-                                    onChange={handleChange}
-                                    placeholder="product-slug-url"
+                                    onChange={handleSlugChange}
+                                    placeholder="productseourl"
                                     disabled={loading}
                                 />
                                 <div className="form-text">
-                                    URL-friendly version (lowercase, hyphens only). Auto-generated from product name.
+                                    Only lowercase letters allowed. No numbers, hyphens, or special characters.
                                 </div>
                                 {errors.slug && (
                                     <div className="invalid-feedback">{errors.slug}</div>

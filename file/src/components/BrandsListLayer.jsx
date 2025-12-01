@@ -201,20 +201,14 @@ const BrandsListLayer = () => {
                                                 </div>
                                             </td>
                                             <td>
-                                                <div className='d-flex align-items-center gap-2'>
-                                                    <div className='form-check form-switch'>
-                                                        <input
-                                                            className='form-check-input'
-                                                            type='checkbox'
-                                                            role='switch'
-                                                            checked={brand.status}
-                                                            onChange={() => handleToggleStatus(brand._id, brand.status)}
-                                                            style={{ width: '44px', height: '24px', cursor: 'pointer' }}
-                                                        />
-                                                    </div>
-                                                    <span className={`badge text-sm px-2 py-1 ${brand.status ? 'bg-success-600 text-white' : 'bg-secondary-200 text-secondary-600'}`}>
-                                                        {brand.status ? 'Active' : 'Inactive'}
-                                                    </span>
+                                                <div className='form-switch switch-primary d-flex align-items-center gap-3'>
+                                                    <input
+                                                        className='form-check-input'
+                                                        type='checkbox'
+                                                        role='switch'
+                                                        checked={brand.status}
+                                                        onChange={() => handleToggleStatus(brand._id, brand.status)}
+                                                    />
                                                 </div>
                                             </td>
                                             <td className='text-center'>

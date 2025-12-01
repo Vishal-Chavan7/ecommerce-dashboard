@@ -144,9 +144,9 @@ const VariantsListLayer = () => {
               <thead>
                 <tr>
                   <th scope="col">Product</th>
-                  <th scope="col">SKU</th>
+                  <th scope="col">sku</th>
                   <th scope="col">Attributes</th>
-                  <th scope="col">Price</th>
+                  <th scope="col">price</th>
                   <th scope="col">Compare Price</th>
                   <th scope="col">Stock</th>
                   <th scope="col">Barcode</th>
@@ -174,13 +174,13 @@ const VariantsListLayer = () => {
                     </td>
                     <td>
                       <span className="text-sm fw-medium text-secondary-light">
-                        ${variant.price?.toFixed(2) || '0.00'}
+                        ₹{variant.price?.toFixed(2) || '0.00'}
                       </span>
                     </td>
                     <td>
                       {variant.compareAtPrice ? (
                         <span className="text-sm text-secondary-light text-decoration-line-through">
-                          ${variant.compareAtPrice.toFixed(2)}
+                          ₹{variant.compareAtPrice.toFixed(2)}
                         </span>
                       ) : (
                         <span className="text-sm text-secondary-light">-</span>

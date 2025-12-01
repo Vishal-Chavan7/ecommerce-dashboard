@@ -35,6 +35,15 @@ const StockManagementLayer = () => {
     fetchLogs();
   }, [selectedProduct, selectedVariant]);
 
+  // Fetch variants when filter product is selected
+  useEffect(() => {
+    if (selectedProduct) {
+      fetchVariantsForProduct(selectedProduct);
+    } else {
+      setVariants([]);
+    }
+  }, [selectedProduct]);
+
   useEffect(() => {
     if (formData.productId) {
       fetchVariantsForProduct(formData.productId);

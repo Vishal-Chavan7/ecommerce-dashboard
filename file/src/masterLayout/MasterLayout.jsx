@@ -19,6 +19,7 @@ const MasterLayout = ({ children }) => {
     navigate("/sign-in");
   };
 
+  // Setup dropdown click handlers once on mount
   useEffect(() => {
     const handleDropdownClick = (event) => {
       event.preventDefault();
@@ -29,55 +30,69 @@ const MasterLayout = ({ children }) => {
 
       const isActive = clickedDropdown.classList.contains("open");
 
-      // Close all dropdowns
+      // Close all OTHER dropdowns (not the clicked one)
       const allDropdowns = document.querySelectorAll(".sidebar-menu .dropdown");
       allDropdowns.forEach((dropdown) => {
-        dropdown.classList.remove("open");
-        const submenu = dropdown.querySelector(".sidebar-submenu");
-        if (submenu) {
-          submenu.style.maxHeight = "0px"; // Collapse submenu
+        if (dropdown !== clickedDropdown) {
+          dropdown.classList.remove("open");
+          const submenu = dropdown.querySelector(".sidebar-submenu");
+          if (submenu) {
+            submenu.style.maxHeight = null; // Reset to CSS default (0)
+          }
         }
       });
 
       // Toggle the clicked dropdown
+      const submenu = clickedDropdown.querySelector(".sidebar-submenu");
       if (!isActive) {
         clickedDropdown.classList.add("open");
-        const submenu = clickedDropdown.querySelector(".sidebar-submenu");
         if (submenu) {
           submenu.style.maxHeight = `${submenu.scrollHeight}px`; // Expand submenu
+        }
+      } else {
+        clickedDropdown.classList.remove("open");
+        if (submenu) {
+          submenu.style.maxHeight = null; // Collapse submenu to CSS default
         }
       }
     };
 
+    // Open dropdown that contains the current active route
+    const openActiveDropdown = () => {
+      const allDropdowns = document.querySelectorAll(".sidebar-menu .dropdown");
+      allDropdowns.forEach((dropdown) => {
+        const submenuLinks = dropdown.querySelectorAll(".sidebar-submenu li a");
+        let hasActiveLink = false;
+
+        submenuLinks.forEach((link) => {
+          if (
+            link.getAttribute("href") === location.pathname ||
+            link.getAttribute("to") === location.pathname
+          ) {
+            hasActiveLink = true;
+          }
+        });
+
+        if (hasActiveLink) {
+          dropdown.classList.add("open");
+          const submenu = dropdown.querySelector(".sidebar-submenu");
+          if (submenu) {
+            submenu.style.maxHeight = `${submenu.scrollHeight}px`;
+          }
+        }
+      });
+    };
+
     // Attach click event listeners to all dropdown triggers
     const dropdownTriggers = document.querySelectorAll(
-      ".sidebar-menu .dropdown > a, .sidebar-menu .dropdown > Link"
+      ".sidebar-menu .dropdown > a"
     );
 
     dropdownTriggers.forEach((trigger) => {
       trigger.addEventListener("click", handleDropdownClick);
     });
 
-    const openActiveDropdown = () => {
-      const allDropdowns = document.querySelectorAll(".sidebar-menu .dropdown");
-      allDropdowns.forEach((dropdown) => {
-        const submenuLinks = dropdown.querySelectorAll(".sidebar-submenu li a");
-        submenuLinks.forEach((link) => {
-          if (
-            link.getAttribute("href") === location.pathname ||
-            link.getAttribute("to") === location.pathname
-          ) {
-            dropdown.classList.add("open");
-            const submenu = dropdown.querySelector(".sidebar-submenu");
-            if (submenu) {
-              submenu.style.maxHeight = `${submenu.scrollHeight}px`; // Expand submenu
-            }
-          }
-        });
-      });
-    };
-
-    // Open the submenu that contains the active route
+    // Open active dropdown only once on mount
     openActiveDropdown();
 
     // Cleanup event listeners on unmount
@@ -86,7 +101,7 @@ const MasterLayout = ({ children }) => {
         trigger.removeEventListener("click", handleDropdownClick);
       });
     };
-  }, [location.pathname]);
+  }, []); // Run only once on mount
 
   let sidebarControl = () => {
     seSidebarActive(!sidebarActive);
@@ -206,66 +221,66 @@ const MasterLayout = ({ children }) => {
                 <span>Products</span>
               </NavLink>
             </li>
-            <li>
+            <li className='ms-4'>
               <NavLink
                 to='/variants-list'
                 className={(navData) => (navData.isActive ? "active-page" : "")}
               >
-                <Icon icon='carbon:data-structured' className='menu-icon' />
+                <i className='ri-circle-fill circle-icon text-warning-main w-auto me-2' style={{ fontSize: '8px' }} />
                 <span>Product Variants</span>
               </NavLink>
             </li>
-            <li>
+            <li className='ms-4'>
               <NavLink
                 to='/product-gallery'
                 className={(navData) => (navData.isActive ? "active-page" : "")}
               >
-                <Icon icon='solar:gallery-bold-duotone' className='menu-icon' />
+                <i className='ri-circle-fill circle-icon text-info-main w-auto me-2' style={{ fontSize: '8px' }} />
                 <span>Product Gallery</span>
               </NavLink>
             </li>
-            <li>
+            <li className='ms-4'>
               <NavLink
                 to='/stock-management'
                 className={(navData) => (navData.isActive ? "active-page" : "")}
               >
-                <Icon icon='mdi:package-variant-closed' className='menu-icon' />
+                <i className='ri-circle-fill circle-icon text-danger-main w-auto me-2' style={{ fontSize: '8px' }} />
                 <span>Stock Management</span>
               </NavLink>
             </li>
-            <li>
+            <li className='ms-4'>
               <NavLink
                 to='/tags-list'
                 className={(navData) => (navData.isActive ? "active-page" : "")}
               >
-                <Icon icon='solar:tag-bold-duotone' className='menu-icon' />
+                <i className='ri-circle-fill circle-icon text-success-main w-auto me-2' style={{ fontSize: '8px' }} />
                 <span>Tags</span>
               </NavLink>
             </li>
-            <li>
+            <li className='ms-4'>
               <NavLink
                 to='/faqs-list'
                 className={(navData) => (navData.isActive ? "active-page" : "")}
               >
-                <Icon icon='material-symbols:help' className='menu-icon' />
+                <i className='ri-circle-fill circle-icon text-primary-600 w-auto me-2' style={{ fontSize: '8px' }} />
                 <span>Product FAQs</span>
               </NavLink>
             </li>
-            <li>
+            <li className='ms-4'>
               <NavLink
                 to='/product-seo-list'
                 className={(navData) => (navData.isActive ? "active-page" : "")}
               >
-                <Icon icon='mdi:search-web' className='menu-icon' />
+                <i className='ri-circle-fill circle-icon text-warning-main w-auto me-2' style={{ fontSize: '8px' }} />
                 <span>Product SEO</span>
               </NavLink>
             </li>
-            <li>
+            <li className='ms-4'>
               <NavLink
                 to='/product-pricing-list'
                 className={(navData) => (navData.isActive ? "active-page" : "")}
               >
-                <Icon icon='mdi:currency-inr' className='menu-icon' />
+                <i className='ri-circle-fill circle-icon text-info-main w-auto me-2' style={{ fontSize: '8px' }} />
                 <span>Product Pricing</span>
               </NavLink>
             </li>

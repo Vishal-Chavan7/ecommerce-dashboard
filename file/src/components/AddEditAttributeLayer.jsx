@@ -48,12 +48,12 @@ const AddEditAttributeLayer = () => {
     };
 
     const handleNameChange = (e) => {
-        const name = e.target.value;
-        setFormData({
-            ...formData,
-            name,
-            slug: name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
-        });
+        setFormData({ ...formData, name: e.target.value });
+    };
+
+    const handleSlugChange = (e) => {
+        const slug = e.target.value.toLowerCase().replace(/[^a-z]/g, '');
+        setFormData({ ...formData, slug });
     };
 
     const handleAddValue = () => {
@@ -150,7 +150,8 @@ const AddEditAttributeLayer = () => {
                             </div>
                             <div className='col-md-6'>
                                 <label className='form-label'>Slug <span className='text-danger'>*</span></label>
-                                <input type='text' className='form-control' value={formData.slug} onChange={(e) => setFormData({ ...formData, slug: e.target.value })} placeholder='e.g., color, size, material' required />
+                                <input type='text' className='form-control' value={formData.slug} onChange={handleSlugChange} placeholder='e.g., color, size, material' required />
+                                <small className='form-text text-muted'>Only lowercase letters allowed</small>
                             </div>
                             <div className='col-md-6'>
                                 <label className='form-label'>Attribute Type <span className='text-danger'>*</span></label>
@@ -191,7 +192,7 @@ const AddEditAttributeLayer = () => {
                                                     : 'This attribute will not appear in filters'}
                                             </p>
                                         </div>
-                                        <div className='form-check form-switch pe-3'>
+                                        <div className='form-switch switch-primary d-flex align-items-center gap-3'>
                                             <input
                                                 className='form-check-input'
                                                 type='checkbox'
@@ -199,7 +200,6 @@ const AddEditAttributeLayer = () => {
                                                 id='isFilter'
                                                 checked={formData.isFilter}
                                                 onChange={(e) => setFormData({ ...formData, isFilter: e.target.checked })}
-                                                style={{ width: '52px', height: '28px', cursor: 'pointer' }}
                                             />
                                         </div>
                                     </div>
@@ -223,7 +223,7 @@ const AddEditAttributeLayer = () => {
                                                     : 'This attribute is inactive and hidden from products'}
                                             </p>
                                         </div>
-                                        <div className='form-check form-switch pe-3'>
+                                        <div className='form-switch switch-primary d-flex align-items-center gap-3'>
                                             <input
                                                 className='form-check-input'
                                                 type='checkbox'
@@ -231,7 +231,6 @@ const AddEditAttributeLayer = () => {
                                                 id='status'
                                                 checked={formData.status}
                                                 onChange={(e) => setFormData({ ...formData, status: e.target.checked })}
-                                                style={{ width: '52px', height: '28px', cursor: 'pointer' }}
                                             />
                                         </div>
                                     </div>

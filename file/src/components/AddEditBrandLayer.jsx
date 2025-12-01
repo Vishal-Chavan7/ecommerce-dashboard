@@ -286,7 +286,7 @@ const AddEditBrandLayer = () => {
                                                     : 'This brand is inactive and hidden from the store'}
                                             </p>
                                         </div>
-                                        <div className='form-check form-switch pe-3'>
+                                        <div className='form-switch switch-primary d-flex align-items-center gap-3'>
                                             <input
                                                 className='form-check-input'
                                                 type='checkbox'
@@ -294,7 +294,6 @@ const AddEditBrandLayer = () => {
                                                 id='status'
                                                 checked={formData.status}
                                                 onChange={(e) => setFormData({ ...formData, status: e.target.checked })}
-                                                style={{ width: '52px', height: '28px', cursor: 'pointer' }}
                                             />
                                         </div>
                                     </div>

@@ -4,6 +4,14 @@ import { toast } from 'react-toastify';
 import { Icon } from '@iconify/react';
 import api from '../api/axios';
 
+const API_BASE_URL = process.env.REACT_APP_API_URL?.replace('/api', '') || 'http://localhost:5000';
+
+const getImageUrl = (path) => {
+    if (!path) return '';
+    if (path.startsWith('http')) return path;
+    return `${API_BASE_URL}${path}`;
+};
+
 const AddEditProductLayer = () => {
     const navigate = useNavigate();
     const { id } = useParams();
@@ -76,7 +84,7 @@ const AddEditProductLayer = () => {
 
             // Set preview if thumbnail exists
             if (product.thumbnail) {
-                setThumbnailPreview(product.thumbnail);
+                setThumbnailPreview(getImageUrl(product.thumbnail));
             }
         } catch (error) {
             console.error('Error fetching product:', error);

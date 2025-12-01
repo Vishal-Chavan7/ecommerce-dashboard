@@ -11,7 +11,8 @@ const AddEditVariantLayer = () => {
 
   const [loading, setLoading] = useState(false);
   const [products, setProducts] = useState([]);
-  
+  const [availableAttributes, setAvailableAttributes] = useState([]);
+
   const [formData, setFormData] = useState({
     productId: '',
     sku: '',
@@ -22,10 +23,11 @@ const AddEditVariantLayer = () => {
     status: true,
   });
 
-  const [attributes, setAttributes] = useState([{ name: '', value: '' }]);
+  const [attributes, setAttributes] = useState([{ name: '', value: '', isManual: false }]);
 
   useEffect(() => {
     fetchProducts();
+    fetchAttributes();
     if (isEditMode) {
       fetchVariant();
     }
@@ -41,12 +43,21 @@ const AddEditVariantLayer = () => {
     }
   };
 
+  const fetchAttributes = async () => {
+    try {
+      const response = await api.get('/admin/attributes');
+      setAvailableAttributes(response.data || []);
+    } catch (error) {
+      console.error('Error fetching attributes:', error);
+    }
+  };
+
   const fetchVariant = async () => {
     try {
       setLoading(true);
       const response = await api.get(`/admin/variants/${id}`);
       const variant = response.data;
-      
+
       setFormData({
         productId: variant.productId || '',
         sku: variant.sku || '',
@@ -88,7 +99,22 @@ const AddEditVariantLayer = () => {
   };
 
   const handleAddAttribute = () => {
-    setAttributes([...attributes, { name: '', value: '' }]);
+    setAttributes([...attributes, { name: '', value: '', isManual: false }]);
+  };
+
+  const handleAttributeNameSelect = (index, selectedName) => {
+    const newAttributes = [...attributes];
+    if (selectedName === 'manual') {
+      newAttributes[index] = { name: '', value: '', isManual: true };
+    } else {
+      newAttributes[index] = { name: selectedName, value: '', isManual: false };
+    }
+    setAttributes(newAttributes);
+  };
+
+  const getAvailableValues = (attributeName) => {
+    const attr = availableAttributes.find(a => a.name === attributeName);
+    return attr?.values || [];
   };
 
   const handleRemoveAttribute = (index) => {
@@ -117,7 +143,7 @@ const AddEditVariantLayer = () => {
       toast.error('Stock cannot be negative');
       return false;
     }
-    
+
     // Validate attributes
     const validAttributes = attributes.filter(attr => attr.name.trim() && attr.value.trim());
     if (validAttributes.length === 0) {
@@ -130,15 +156,15 @@ const AddEditVariantLayer = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
 
     try {
       setLoading(true);
-      
+
       // Filter out empty attributes
       const validAttributes = attributes.filter(attr => attr.name.trim() && attr.value.trim());
-      
+
       const payload = {
         ...formData,
         attributes: validAttributes,
@@ -154,7 +180,7 @@ const AddEditVariantLayer = () => {
         await api.post('/admin/variants', payload);
         toast.success('Variant created successfully');
       }
-      
+
       navigate('/variants-list');
     } catch (error) {
       console.error('Error saving variant:', error);
@@ -249,27 +275,58 @@ const AddEditVariantLayer = () => {
                   Add Attribute
                 </button>
               </label>
-              
+
               <div className="border rounded-3 p-3" style={{ maxHeight: '300px', overflowY: 'auto' }}>
                 {attributes.map((attr, index) => (
                   <div key={index} className="row g-2 mb-3">
                     <div className="col-5">
-                      <input
-                        type="text"
-                        className="form-control form-control-sm"
-                        placeholder="Name (e.g., Color)"
-                        value={attr.name}
-                        onChange={(e) => handleAttributeChange(index, 'name', e.target.value)}
-                      />
+                      {attr.isManual ? (
+                        <input
+                          type="text"
+                          className="form-control form-control-sm p-1"
+                          placeholder="Name (e.g., Color)"
+                          value={attr.name}
+                          onChange={(e) => handleAttributeChange(index, 'name', e.target.value)}
+                        />
+                      ) : (
+                        <select
+                          className="form-select form-select-sm p-1"
+                          value={attr.name}
+                          onChange={(e) => handleAttributeNameSelect(index, e.target.value)}
+                        >
+                          <option value="">Select Attribute</option>
+                          {availableAttributes.map(availAttr => (
+                            <option key={availAttr._id} value={availAttr.name}>
+                              {availAttr.name}
+                            </option>
+                          ))}
+                          <option value="manual">✏️ Manual Entry</option>
+                        </select>
+                      )}
                     </div>
                     <div className="col-5">
-                      <input
-                        type="text"
-                        className="form-control form-control-sm"
-                        placeholder="Value (e.g., Blue)"
-                        value={attr.value}
-                        onChange={(e) => handleAttributeChange(index, 'value', e.target.value)}
-                      />
+                      {attr.isManual || !attr.name ? (
+                        <input
+                          type="text"
+                          className="form-control form-control-sm"
+                          placeholder="Value (e.g., Blue)"
+                          value={attr.value}
+                          onChange={(e) => handleAttributeChange(index, 'value', e.target.value)}
+                        />
+                      ) : (
+                        <select
+                          className="form-select form-select-sm p-1"
+                          value={attr.value}
+                          onChange={(e) => handleAttributeChange(index, 'value', e.target.value)}
+                        >
+                          <option value="">Select Value</option>
+                          {getAvailableValues(attr.name).map((val, i) => (
+                            <option key={i} value={val.label}>
+                              {val.label}
+                            </option>
+                          ))}
+                        </select>
+                      )}
                     </div>
                     <div className="col-2">
                       <button
@@ -285,7 +342,7 @@ const AddEditVariantLayer = () => {
                 ))}
               </div>
               <small className="text-muted">
-                Example: Color = Blue, Storage = 128GB, Size = Large
+                Select from created attributes or choose "Manual Entry" to add custom attributes. Example: Color = Blue, Storage = 128GB
               </small>
             </div>
 

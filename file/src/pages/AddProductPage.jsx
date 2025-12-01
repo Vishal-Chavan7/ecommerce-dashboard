@@ -1,7 +1,7 @@
 import React from 'react';
 import MasterLayout from '../masterLayout/MasterLayout';
 import Breadcrumb from '../components/Breadcrumb';
-import AddEditProductLayer from '../components/AddEditProductLayer';
+import UnifiedProductForm from '../components/UnifiedProductForm';
 
 const AddProductPage = () => {
     return (
@@ -14,7 +14,7 @@ const AddProductPage = () => {
                     { name: 'Add Product', path: '/add-product' }
                 ]}
             />
-            <AddEditProductLayer />
+            <UnifiedProductForm />
         </MasterLayout>
     );
 };

@@ -111,7 +111,7 @@ const AttributesListLayer = () => {
                                 placeholder='Search...'
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                style={{ width: 'auto', minWidth: '200px', fontSize: '15px', padding: '8px 12px' }}
+                                style={{ width: 'auto', minWidth: '200px', fontSize: '15px', padding: '8px 12px 8px 40px' }}
                             />
                             <span className='icon'>
                                 <Icon icon='ion:search-outline' />
@@ -187,14 +187,13 @@ const AttributesListLayer = () => {
                                             </td>
                                             <td>
                                                 <div className='d-flex align-items-center gap-2'>
-                                                    <div className='form-check form-switch'>
+                                                    <div className='form-switch switch-primary d-flex align-items-center gap-3'>
                                                         <input
                                                             className='form-check-input'
                                                             type='checkbox'
                                                             role='switch'
                                                             checked={attr.status}
                                                             onChange={() => handleToggleStatus(attr._id, attr.status)}
-                                                            style={{ width: '48px', height: '26px', cursor: 'pointer' }}
                                                         />
                                                     </div>
                                                     <span className={`badge px-2 py-1 ${attr.status ? 'bg-success-600 text-white' : 'bg-secondary-200 text-secondary-600'}`} style={{ fontSize: '13px', minWidth: '70px' }}>
