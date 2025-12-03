@@ -1091,9 +1091,9 @@ const UnifiedProductForm = () => {
                                                 />
                                             </div>
                                             <div className="col-12">
-                                                <label className="form-label fw-semibold mb-3">
-                                                    <Icon icon="mdi:folder-multiple-outline" className="me-2" />
-                                                    Categories <span className="text-danger">*</span>
+                                                <label className="form-label fw-semibold mb-3 d-flex align-items-center gap-2">
+                                                    <Icon icon="mdi:folder-multiple-outline" style={{ fontSize: '18px' }} />
+                                                    <span>Categories <span className="text-danger">*</span></span>
                                                 </label>
 
                                                 {/* Search input with improved design */}
